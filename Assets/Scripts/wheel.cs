@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+//using UnityEngine.Networking;
 
 public class wheel : MonoBehaviour {
 
@@ -46,8 +47,6 @@ public class wheel : MonoBehaviour {
 		radius = GetComponent<SphereCollider>().radius;
 		suspensionRange = (GetComponent<SphereCollider>().radius/2f)*wheelHangDistance;
 		touchGround = false;
-
-
 	}
 	
 	// Update is called once per frame
@@ -122,7 +121,6 @@ public class wheel : MonoBehaviour {
 		{
 			//spin tire visual//
 			wheelObj.transform.Rotate((vehicleObj.GetComponent<vehicleController>().zVel*Time.deltaTime*100f),0f,0f);
-			
 		}
 
 		//trail renderer//

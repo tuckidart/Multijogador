@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 using UnityEditor;
 #endif
 
-public class vehicleController : NetworkBehaviour {
+public class vehicleController_backup : NetworkBehaviour {
 	
 	
 	[Header("Meshes")]
@@ -28,9 +28,6 @@ public class vehicleController : NetworkBehaviour {
 	public PhysicMaterial tirePhysicsMat;
 	[Tooltip("Add a Physics Material for the body of the vehicle, To edit in the inspector select the material in the project folder. increase Bounciness above 0 will cause stronger bounce on collision")]
 	public PhysicMaterial bodyPhysicsMat;
-
-	[Header("Body Colliders")]
-	public GameObject[] bodyColliders;
 	
 	[Header("Vehicle Tuning")]
 	
@@ -91,12 +88,12 @@ public class vehicleController : NetworkBehaviour {
 	[HideInInspector]
 	public Rigidbody rbody;
 	private Rigidbody jbody;
-
 	[HideInInspector]
+	public GameObject physicsBody;
+	private GameObject colBody;
 	private GameObject suspensionBody;
 	private GameObject colSuspension;
 	private GameObject wheels;
-	private GameObject colliders;
 	private GameObject colLB;
 	private GameObject colLF;
 	private GameObject colRB;
@@ -105,6 +102,7 @@ public class vehicleController : NetworkBehaviour {
 	private GameObject turnRF;
 	
 	[HideInInspector]
+	[SyncVar]
 	public float inputX;
 	private float inputY;
 	private float xVel;
@@ -185,15 +183,21 @@ public class vehicleController : NetworkBehaviour {
 	{
 		//make sure vehicleBody has the correct parent//
 		vehicleBody.transform.SetParent(transform);
+
+		//create physics body//
+		physicsBody = new GameObject(gameObject.name+" physics");
+		physicsBody.transform.position = (wheelLeftBack.transform.position + wheelLeftFront.transform.position + wheelRightBack.transform.position + wheelRightFront.transform.position)/4;
+		physicsBody.transform.rotation = transform.rotation;
+		transform.position = physicsBody.transform.position;
 		
 		//create a wheels holder
-		wheels = new GameObject("Wheels");
+		wheels = new GameObject(gameObject.name+" wheels");
 		wheels.transform.SetParent(transform);
-		wheels.transform.position = transform.position;
-		wheels.transform.rotation = transform.rotation;
+		wheels.transform.position = physicsBody.transform.position;
+		wheels.transform.rotation = physicsBody.transform.rotation;
 		
 		//create rigidbody//
-		rbody = GetComponent<Rigidbody>();
+		rbody = physicsBody.AddComponent<Rigidbody>();
 		rbody.interpolation = RigidbodyInterpolation.Interpolate;
 		rbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 		rbody.mass = 100f;
@@ -218,7 +222,7 @@ public class vehicleController : NetworkBehaviour {
 		}
 		col.material = tirePhysicsMat;
 		col.center = new Vector3(0f,0f,0f);
-		colLB.transform.SetParent(transform);
+		colLB.transform.SetParent(physicsBody.transform);
 		wheel wheelScript = colLB.AddComponent<wheel>();
 		wheelScript.vehicleObj = gameObject;
 		wheelScript.wheelObj = wheelLeftBack;
@@ -244,7 +248,7 @@ public class vehicleController : NetworkBehaviour {
 		}
 		col.material = tirePhysicsMat;
 		col.center = new Vector3(0f,0f,0f);
-		colLF.transform.SetParent(transform);
+		colLF.transform.SetParent(physicsBody.transform);
 		wheelScript = colLF.AddComponent<wheel>();
 		wheelScript.vehicleObj = gameObject;
 		wheelScript.wheelObj = wheelLeftFront;
@@ -277,7 +281,7 @@ public class vehicleController : NetworkBehaviour {
 		}
 		col.material = tirePhysicsMat;
 		col.center = new Vector3(0f,0f,0f);
-		colRB.transform.SetParent(transform);
+		colRB.transform.SetParent(physicsBody.transform);
 		wheelScript = colRB.AddComponent<wheel>();
 		wheelScript.vehicleObj = gameObject;
 		wheelScript.wheelObj = wheelRightBack;
@@ -303,7 +307,7 @@ public class vehicleController : NetworkBehaviour {
 		}
 		col.material = tirePhysicsMat;
 		col.center = new Vector3(0f,0f,0f);
-		colRF.transform.SetParent(transform);
+		colRF.transform.SetParent(physicsBody.transform);
 		wheelScript = colRF.AddComponent<wheel>();
 		wheelScript.vehicleObj = gameObject;
 		wheelScript.wheelObj = wheelRightFront;
@@ -320,10 +324,10 @@ public class vehicleController : NetworkBehaviour {
 		wheelScript.frontTire = true;
 		
 		//create a body holder//
-		suspensionBody = new GameObject("Suspension");
+		suspensionBody = new GameObject(gameObject.name+" suspension");
 		suspensionBody.transform.SetParent(transform);
-		suspensionBody.transform.position = transform.position;
-		suspensionBody.transform.rotation = transform.rotation;
+		suspensionBody.transform.position = physicsBody.transform.position;
+		suspensionBody.transform.rotation = physicsBody.transform.rotation;
 		
 		jbody = suspensionBody.AddComponent<Rigidbody>();
 		jbody.useGravity = false;
@@ -383,21 +387,16 @@ public class vehicleController : NetworkBehaviour {
 		jbody.centerOfMass = col2.center + new Vector3(0f,col.radius*0.5f,0f);
 		rbody.centerOfMass = col2.center + new Vector3(0f,-col.radius*0.5f,0f);
 		defaultCOG = rbody.centerOfMass;
-
-		colliders = new GameObject("Wheel Colliders");
-		colliders.transform.SetParent(transform);
-		colliders.transform.position = transform.position;
-		colliders.transform.rotation = transform.rotation;
-		colLB.transform.SetParent(colliders.transform);
-		colRB.transform.SetParent(colliders.transform);
-		colRF.transform.SetParent(colliders.transform);
-		colLF.transform.SetParent(colliders.transform);
-
-		for(int i=0;i<bodyColliders.Length;i++)
-		{
-			bodyColliders[i].transform.SetParent(vehicleBody.transform);
-		}
-	}
+		
+		colBody = new GameObject("colBody");
+		colBody.transform.position = physicsBody.transform.position;
+		colBody.transform.rotation = physicsBody.transform.rotation;
+		colBody.transform.SetParent(physicsBody.transform);
+		BoxCollider col3 = colBody.AddComponent<BoxCollider>();
+		col3.size = new Vector3(distX - col.radius,col.radius*0.5f,distZ);
+		col3.center = new Vector3(0f,col.radius,0f);
+		col3.material = bodyPhysicsMat;
+}
 	
 	void getDiameter(Mesh mesh)
 	{
@@ -491,11 +490,11 @@ public class vehicleController : NetworkBehaviour {
 		//prevent being stuck upside down//
 		if(autoCorrectRot)
 		{
-			Vector3 rayUp = transform.TransformDirection(Vector3.up);
+			Vector3 rayUp = physicsBody.transform.TransformDirection(Vector3.up);
 			//Debug.DrawRay(physicsBody.transform.position, rayUp*5f, Color.green);
 			RaycastHit[] hits;
 			roofOnGround = false;
-			hits = Physics.RaycastAll (transform.position, rayUp,5f);
+			hits = Physics.RaycastAll (physicsBody.transform.position, rayUp,5f);
 			
 			if(hits.Length > 2)
 			{
@@ -520,7 +519,7 @@ public class vehicleController : NetworkBehaviour {
 					
 					if(unstableTime > 10f)
 					{
-						transform.rotation = Quaternion.Euler(0f,0f,0f);
+						physicsBody.transform.rotation = Quaternion.Euler(0f,0f,0f);
 						unstableTime = 6f;
 					}
 				}
@@ -693,15 +692,15 @@ public class vehicleController : NetworkBehaviour {
 		}
 
 		//track velocity//
-		xVel = transform.InverseTransformDirection(rbody.velocity).x;
-		zVel = transform.InverseTransformDirection(rbody.velocity).z;
+		xVel = physicsBody.transform.InverseTransformDirection(rbody.velocity).x;
+		zVel = physicsBody.transform.InverseTransformDirection(rbody.velocity).z;
 		
 		//accellerate forwards//
 		if(inputY > 0)
 		{
 			if(FtiresOnGround > 0 || airTime < 0.6f)
 			{
-				rbody.AddForce(inputY*transform.forward*(horsepower*400f)*Time.deltaTime);
+				rbody.AddForce(inputY*physicsBody.transform.forward*(horsepower*400f)*Time.deltaTime);
 			}
 		}
 		//accellerate backwards
@@ -709,17 +708,17 @@ public class vehicleController : NetworkBehaviour {
 		{
 			if(BtiresOnGround > 0)
 			{
-				rbody.AddForce(inputY*transform.forward*(horsepower*400f)*Time.deltaTime);
+				rbody.AddForce(inputY*physicsBody.transform.forward*(horsepower*400f)*Time.deltaTime);
 			}
 		}
 		
 		if(tiresOnGround > 0 || airTime < 0.3f)
 		{
 			//stop sliding sideways//
-			rbody.AddForce(transform.right*xVel*-(tireGrip*140f)*Time.deltaTime);
+			rbody.AddForce(physicsBody.transform.right*xVel*-(tireGrip*140f)*Time.deltaTime);
 			
 			//downforce//
-			rbody.AddForce(transform.up*(Mathf.Abs(zVel)*-5000f)*Time.deltaTime);
+			rbody.AddForce(physicsBody.transform.up*(Mathf.Abs(zVel)*-5000f)*Time.deltaTime);
 		}
 		else
 		{
@@ -749,18 +748,18 @@ public class vehicleController : NetworkBehaviour {
 		rbody.angularVelocity = new Vector3(rbody.angularVelocity.x,0f,rbody.angularVelocity.z);
 		if(airTime > 0f)
 		{
-			transform.Rotate(0f,y*1.5f,0f);
+			physicsBody.transform.Rotate(0f,y*1.5f,0f);
 		}
 		else
 		{
-			transform.Rotate(0f,y*2f,0f);
+			physicsBody.transform.Rotate(0f,y*2f,0f);
 		}
 	
 		//smoothen out the visual movement//
 		float smooth = 0.1f + (rbody.velocity.magnitude*0.02f);
 	
-		transform.position = Vector3.Slerp(transform.position,transform.position,smooth);
-		transform.rotation = Quaternion.Slerp(transform.rotation,transform.rotation,0.2f);
+		transform.position = Vector3.Slerp(transform.position,physicsBody.transform.position,smooth);
+		transform.rotation = Quaternion.Slerp(transform.rotation,physicsBody.transform.rotation,0.2f);
 		vehicleBody.transform.rotation = Quaternion.Slerp(vehicleBody.transform.rotation, suspensionBody.transform.rotation,0.2f);
 	}
 

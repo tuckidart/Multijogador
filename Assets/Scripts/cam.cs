@@ -89,6 +89,8 @@ public class cam : MonoBehaviour {
 		pinchZoom();
 		#endif
 		
+		if(carObj == null)
+			return;
 		
 		//pinch camera based on speed of vehicle//
 		float fov = initFOV + (carObj.GetComponent<vehicleController>().zVel*FieldOfViewEffect);
@@ -108,6 +110,9 @@ public class cam : MonoBehaviour {
 	
 	void FixedUpdate()
 	{
+		if(carObj == null)
+			return;
+		
 		if(followSpeed < 100f)
 		{
 			moveCamera();
