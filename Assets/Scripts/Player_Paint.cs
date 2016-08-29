@@ -5,15 +5,15 @@ using UnityEngine.Networking;
 
 public class Player_Paint : NetworkBehaviour {
 
+	public GameObject carBody;
+
 	public List<Texture> textureList;
 	private Dictionary<int, Texture> textures = new Dictionary<int, Texture> ();
 
 	[SyncVar (hook = "UpdateDisplayedTexture")]
-	public int currentTexture;
+	private int currentTexture;
 
-	public GameObject carBody;
-
-	public bool canPaint;
+	private bool canPaint;
 
 	void Start()
 	{
