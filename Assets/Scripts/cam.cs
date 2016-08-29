@@ -26,7 +26,7 @@ public class cam : MonoBehaviour {
 	[Tooltip("How much the camera lags/drags behind the vehicle when it accelerates (this increases the sense of speed). 0 means the camera will not follow, 100 means the camera sticks like glue to the vehicle")]
 	[Range(0f,100f)]
 	[ContextMenuItem("Reset 'Follow Speed' to default", "resetFollowSpeed")]
-	public float followSpeed = 5f;
+	public float followSpeed = 100f;
 	[Tooltip("how much the camera distorts perspective as the vehicle accelerates. When the car slows the distorition lessens")]
 	[Range(0f,3f)]
 	[ContextMenuItem("Reset 'Field Of View Effect' to default", "resetFieldOfViewEffect")]
