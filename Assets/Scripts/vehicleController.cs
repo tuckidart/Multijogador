@@ -8,7 +8,6 @@ using UnityEditor;
 
 public class vehicleController : NetworkBehaviour {
 	
-	
 	[Header("Meshes")]
 	
 	[Tooltip("Add a vehicle body here. we recommend creating an empty GameObject (reset it's transforms) and put your car body parts inside.")]

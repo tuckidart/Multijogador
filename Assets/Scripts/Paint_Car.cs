@@ -3,27 +3,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
 
-public class Player_Paint : NetworkBehaviour {
+public class Paint_Car : NetworkBehaviour {
 
 	public GameObject carBody;
+	private AudioSource sprayFX;
 
 	public List<Texture> textureList;
 	private Dictionary<int, Texture> textures = new Dictionary<int, Texture> ();
 
 	[SyncVar (hook = "UpdateDisplayedTexture")]
-	private int currentTexture;
+	public int currentTexture; //each car prefab has a different currentTexture int value
 
 	private bool canPaint;
 
 	void Start()
 	{
+		sprayFX = GameObject.FindGameObjectWithTag ("AutoRepair").GetComponent<AudioSource> ();
 		canPaint = true;
 		for(int i=0;i<textureList.Count;i++)
 		{
 			textures.Add (i, textureList [i]);
 		}
 	}
-		
+
 	void OnTriggerEnter(Collider hit)
 	{
 		if (isLocalPlayer)
@@ -36,9 +38,10 @@ public class Player_Paint : NetworkBehaviour {
 					randTex = Random.Range (0, textureList.Count);
 				while
 					(randTex == currentTexture);
-					
+
 				CmdPaint(randTex);
 				canPaint = false;
+				sprayFX.Play ();
 			}	
 		}
 	}
