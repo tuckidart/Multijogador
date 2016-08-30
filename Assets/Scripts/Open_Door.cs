@@ -6,8 +6,7 @@ public class Open_Door : MonoBehaviour {
 	private Vector3 originalPosition;
 	public Transform door;
 	public Transform doorTarget;
-	public float speedPos;
-	public float speedRot;
+	public float speed;
 
 	public bool openDoor;
 	public bool closeDoor;
@@ -23,8 +22,8 @@ public class Open_Door : MonoBehaviour {
 	void Update () {
 		if (openDoor)
 		{
-			door.position = Vector3.Lerp (door.position, doorTarget.position, speedPos * Time.deltaTime);
-			door.rotation = Quaternion.Lerp (door.rotation, doorTarget.rotation, speedRot * Time.deltaTime);
+			door.position = Vector3.Lerp (door.position, doorTarget.position, speed * Time.deltaTime);
+			door.rotation = Quaternion.Lerp (door.rotation, doorTarget.rotation, speed * Time.deltaTime);
 			if(door.position == doorTarget.position)
 			{
 				openDoor = false;
@@ -32,8 +31,8 @@ public class Open_Door : MonoBehaviour {
 		}
 		if (closeDoor)
 		{
-			door.position = Vector3.Lerp (door.position, originalPosition, speedPos * Time.deltaTime);
-			door.rotation = Quaternion.Lerp (door.rotation, Quaternion.identity, speedRot * Time.deltaTime);
+			door.position = Vector3.Lerp (door.position, originalPosition, speed * Time.deltaTime);
+			door.rotation = Quaternion.Lerp (door.rotation, Quaternion.identity, speed * Time.deltaTime);
 			if (door.position == originalPosition)
 			{
 				closeDoor = false;
@@ -41,14 +40,13 @@ public class Open_Door : MonoBehaviour {
 		}
 	}
 
-	void OnTriggerEnter()
+	void OnTriggerEnter(Collider hit)
 	{
-		//aqui fazer uma animação da porta
 		openDoor = true;
 		closeDoor = false;
 	}
 
-	void OnTriggerExit()
+	void OnTriggerExit(Collider other)
 	{
 		closeDoor = true;
 		openDoor = false;
