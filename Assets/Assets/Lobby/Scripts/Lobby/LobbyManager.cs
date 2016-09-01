@@ -12,7 +12,7 @@ namespace Prototype.NetworkLobby
     public class LobbyManager : NetworkLobbyManager 
     {
 
-		public Dictionary<int, int> currentPlayers = new Dictionary<int, int>();
+		Dictionary<int, int> currentPlayers = new Dictionary<int, int>();
 
         static short MsgKicked = MsgType.Highest + 1;
 
