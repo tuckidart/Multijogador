@@ -6,8 +6,8 @@ using UnityEngine.Networking;
 public class Paint_Car : NetworkBehaviour {
 
 	public GameObject carBody;
-	public AudioSource autoRepairAudioSource;
-	public GameObject doorCol;
+	private AudioSource autoRepairAudioSource;
+	private GameObject doorCol;
 
 	public List<Texture> textureList;
 	private Dictionary<int, Texture> textures = new Dictionary<int, Texture> ();
@@ -15,14 +15,22 @@ public class Paint_Car : NetworkBehaviour {
 	[SyncVar (hook = "UpdateDisplayedTexture")]
 	public int currentTexture; //each car prefab has a different currentTexture int value
 
-	public bool canPaint;
+	private bool canPaint;
 
 	void Start()
 	{
 		canPaint = true;
-		for(int i=0;i<textureList.Count;i++)
-		{
+		for (int i = 0; i < textureList.Count; i++) {
 			textures.Add (i, textureList [i]);
+		}
+
+		if (isLocalPlayer)
+		{
+			if (gameObject.tag == "Suspect")
+			{
+				int randTex = Random.Range(0, textureList.Count);
+				CmdPaint (randTex);
+			}
 		}
 	}
 

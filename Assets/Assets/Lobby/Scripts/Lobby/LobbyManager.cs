@@ -313,7 +313,7 @@ namespace Prototype.NetworkLobby
                 {
                     p.RpcUpdateRemoveButton();
                     p.ToggleJoinButton(numPlayers + 1 >= minPlayers);
-					currentPlayers.Remove (i);
+					//currentPlayers.Remove (i);
                 }
             }
         }
@@ -328,7 +328,7 @@ namespace Prototype.NetworkLobby
                 {
                     p.RpcUpdateRemoveButton();
                     p.ToggleJoinButton(numPlayers >= minPlayers);
-					currentPlayers.Remove (i);
+					//currentPlayers.Remove (i);
                 }
             }
 
@@ -437,9 +437,17 @@ namespace Prototype.NetworkLobby
 		{
 			int index = currentPlayers [conn.connectionId];
 
-			GameObject _temp = (GameObject)GameObject.Instantiate (spawnPrefabs [index], startPositions [conn.connectionId].position, Quaternion.identity);
-
-			return _temp;
+			if (index == 0)
+			{
+				GameObject _temp = (GameObject)GameObject.Instantiate (spawnPrefabs [index], startPositions [conn.connectionId].position, Quaternion.identity);
+				return _temp;
+			}
+			else
+			{
+				int rand = Random.Range(1, spawnPrefabs.Count);
+				GameObject _temp = (GameObject)GameObject.Instantiate (spawnPrefabs [rand], startPositions [conn.connectionId].position, Quaternion.identity);
+				return _temp;
+			}
 		}
     }
 }
