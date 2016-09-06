@@ -9,6 +9,7 @@ public class Radar : NetworkBehaviour {
 	private GameObject highlightedObj;
 	public Shader highlighted;
 	public Shader notHighlighted;
+	public float distanceToLoseSuspect;
 
 	// Use this for initialization
 	void Start () {
@@ -20,6 +21,12 @@ public class Radar : NetworkBehaviour {
 		
 		if (Input.GetButtonDown ("Jump"))
 			RadarScan ();
+
+		if(objFound != null)
+			if(Vector3.Distance(transform.position, objFound.transform.position) > distanceToLoseSuspect)
+			{
+				highlightedObj.GetComponent<Renderer>().material.shader = notHighlighted;
+			}
 	}
 
 	void RadarScan()
