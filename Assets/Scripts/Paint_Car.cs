@@ -24,11 +24,11 @@ public class Paint_Car : NetworkBehaviour {
 			textures.Add (i, textureList [i]);
 		}
 
-		if (isLocalPlayer)
-		{
-			if (gameObject.tag == "Suspect")
+		if(isLocalPlayer)
+		{				
+			if (gameObject.tag == "Suspect") 
 			{
-				int randTex = Random.Range(0, textureList.Count);
+				int randTex = Random.Range (0, textureList.Count);
 				CmdPaint (randTex);
 			}
 		}
