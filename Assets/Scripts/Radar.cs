@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.Networking;
 
-public class Radar : NetworkBehaviour {
+public class Radar : MonoBehaviour {
 
 	public float radius;
 	private GameObject objFound;

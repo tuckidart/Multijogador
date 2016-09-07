@@ -104,6 +104,7 @@ public class vehicleController : NetworkBehaviour {
 	private GameObject turnRF;
 	
 	[HideInInspector]
+	[SyncVar]
 	public float inputX;
 	private float inputY;
 	private float xVel;
