@@ -29,20 +29,20 @@ public class Impact_Effects : NetworkBehaviour {
 		{
 			if (hit.relativeVelocity.magnitude > 10.0f)
 			{
+				//audio de batida
 				minimap.GetComponent<bl_MiniMap> ().DoHitEffect ();
 				cam.GetComponent<cameraShake> ().Shake ();
 				carhealth -= damageConstant * hit.relativeVelocity.magnitude;
 			}
+		}
 
-			if(carhealth < 0)
-			{
-				CmdDestroyCar ();
-			}
+		if(carhealth < 0)
+		{
+			DestroyCar ();
 		}
 	}
-
-	[Command]
-	void CmdDestroyCar()
+		
+	void DestroyCar()
 	{
 		//fazer explosão, etc...
 		gameObject.GetComponent<vehicleController>().alive = false;
