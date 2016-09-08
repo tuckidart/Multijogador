@@ -444,7 +444,7 @@ namespace Prototype.NetworkLobby
 			}
 			else
 			{
-				int rand = Random.Range(1, spawnPrefabs.Count);
+				int rand = Random.Range(1, spawnPrefabs.Count-1);
 				GameObject _temp = (GameObject)GameObject.Instantiate (spawnPrefabs [rand], startPositions [conn.connectionId].position, Quaternion.identity);
 				return _temp;
 			}

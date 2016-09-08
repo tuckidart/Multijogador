@@ -2,8 +2,9 @@
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
+using UnityEngine.Networking;
 
-public class bl_MiniMap : MonoBehaviour
+public class bl_MiniMap : NetworkBehaviour
 {
     [Separator("General Settings")]
     // Target for the minimap.
@@ -572,14 +573,16 @@ public class bl_MiniMap : MonoBehaviour
     /// <param name="item"></param>
     public void CreateNewItem(bl_MMItemInfo item)
     {
-        GameObject newItem = Instantiate(ItemPrefabSimple, item.Position, Quaternion.identity) as GameObject;
+		GameObject newItem = Instantiate(ItemPrefabSimple, item.Position, Quaternion.identity) as GameObject;
         bl_MiniMapItem mmItem = newItem.GetComponent<bl_MiniMapItem>();
         if (item.Target != null) { mmItem.Target = item.Target; }
         mmItem.Size = item.Size;
         mmItem.IconColor = item.Color;
         mmItem.isInteractable = item.Interactable;
         mmItem.m_Effect = item.Effect;
+		mmItem.InfoItem = "";
         if (item.Sprite != null) { mmItem.Icon = item.Sprite; }
+		NetworkServer.Spawn (newItem);
     }
 
     /// <summary>

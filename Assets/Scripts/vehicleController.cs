@@ -178,8 +178,9 @@ public class vehicleController : NetworkBehaviour {
 
 	public override void OnStartLocalPlayer ()
 	{
-		GameObject.Find("Camera").GetComponent<cam>().carObj = this.gameObject;
-		//lol
+		//GameObject.Find("Camera").GetComponent<cam>().carObj = this.gameObject;
+		GameObject.Find("Camera").GetComponent<CameraFollow>().player = this.gameObject;
+		GameObject.Find ("Camera").GetComponent<CameraFollow> ().enabled = true;
 	}
 	
 	void Awake()

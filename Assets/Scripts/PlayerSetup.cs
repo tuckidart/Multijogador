@@ -3,6 +3,8 @@ using UnityEngine.Networking;
 
 public class PlayerSetup : NetworkBehaviour {
 
+	bl_MMItemInfo myPosition;
+
 	private GameObject minimap;
 
 	[SerializeField]
@@ -31,6 +33,18 @@ public class PlayerSetup : NetworkBehaviour {
 			{
 				minimap.GetComponent<bl_MiniMap> ().LevelName = "Objective - Blend in and escape!";
 			}
+
+			myPosition = GetComponent<bl_MMItemInfo> ();
+			myPosition.Position = transform.position;
+			myPosition.Size = 35;
+			myPosition.Color = new Color (1, 0, 0);
+			CmdCreatePoint ();
 		}
+	}
+
+	[Command]
+	void CmdCreatePoint()
+	{
+		minimap.GetComponent<bl_MiniMap> ().CreateNewItem (myPosition);
 	}
 }

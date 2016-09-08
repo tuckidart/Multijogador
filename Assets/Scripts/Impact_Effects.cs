@@ -27,15 +27,24 @@ public class Impact_Effects : NetworkBehaviour {
 	{
 		if (isLocalPlayer)
 		{
-			if (hit.relativeVelocity.magnitude > 10.0f) {
+			if (hit.relativeVelocity.magnitude > 10.0f)
+			{
 				minimap.GetComponent<bl_MiniMap> ().DoHitEffect ();
+				cam.GetComponent<cameraShake> ().Shake ();
 				carhealth -= damageConstant * hit.relativeVelocity.magnitude;
 			}
-		}
 
-		/*if(carhealth < 0)
-		{
-			destroycar ();
-		}*/
+			if(carhealth < 0)
+			{
+				CmdDestroyCar ();
+			}
+		}
+	}
+
+	[Command]
+	void CmdDestroyCar()
+	{
+		//fazer explosão, etc...
+		Destroy (gameObject);
 	}
 }
