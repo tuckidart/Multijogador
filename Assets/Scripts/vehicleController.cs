@@ -7,6 +7,8 @@ using UnityEditor;
 #endif
 
 public class vehicleController : NetworkBehaviour {
+
+	public bool alive = true;
 	
 	[Header("Meshes")]
 	
@@ -697,21 +699,24 @@ public class vehicleController : NetworkBehaviour {
 		//track velocity//
 		xVel = transform.InverseTransformDirection(rbody.velocity).x;
 		zVel = transform.InverseTransformDirection(rbody.velocity).z;
-		
-		//accellerate forwards//
-		if(inputY > 0)
+
+		if (alive) 
 		{
-			if(FtiresOnGround > 0 || airTime < 0.6f)
+			//accellerate forwards//
+			if (inputY > 0)
 			{
-				rbody.AddForce(inputY*transform.forward*(horsepower*400f)*Time.deltaTime);
+				if (FtiresOnGround > 0 || airTime < 0.6f)
+				{
+					rbody.AddForce (inputY * transform.forward * (horsepower * 400f) * Time.deltaTime);
+				}
 			}
-		}
-		//accellerate backwards
-		else
-		{
-			if(BtiresOnGround > 0)
+			//accellerate backwards
+			else
 			{
-				rbody.AddForce(inputY*transform.forward*(horsepower*400f)*Time.deltaTime);
+				if (BtiresOnGround > 0)
+				{
+					rbody.AddForce (inputY * transform.forward * (horsepower * 400f) * Time.deltaTime);
+				}
 			}
 		}
 		

@@ -45,6 +45,8 @@ public class Impact_Effects : NetworkBehaviour {
 	void CmdDestroyCar()
 	{
 		//fazer explosão, etc...
-		Destroy (gameObject);
+		gameObject.GetComponent<vehicleController>().alive = false;
+
+		//Destroy (gameObject);
 	}
 }

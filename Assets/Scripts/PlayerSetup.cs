@@ -36,8 +36,8 @@ public class PlayerSetup : NetworkBehaviour {
 
 			myPosition = GetComponent<bl_MMItemInfo> ();
 			myPosition.Position = transform.position;
-			myPosition.Size = 35;
-			myPosition.Color = new Color (1, 0, 0);
+			myPosition.Size = 15;
+			myPosition.Color = new Color (1, 1, 0);
 			CmdCreatePoint ();
 		}
 	}
