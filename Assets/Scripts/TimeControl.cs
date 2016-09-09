@@ -7,18 +7,24 @@ public class TimeControl : MonoBehaviour {
 
 	private float startTime;
 
+
 	// Use this for initialization
 	void Start () 
 	{
 		startTime = Time.time;
-		StartCoroutine (StartCountdownToEndGame (durationTime));
+		//StartCoroutine (StartCountdownToEndGame (durationTime));
 	}
 
-	private IEnumerator StartCountdownToEndGame (float seconds) 
+	void Update ()
 	{
-		yield return new WaitForSeconds (seconds);
-
-		FireEndOfDurationTime ();
+		if (Time.time >= startTime + durationTime) 
+		{
+			FireEndOfDurationTime ();
+		} 
+		else 
+		{
+			Debug.Log (durationTime - Time.time + startTime);
+		}	
 	}
 
 	private void FireEndOfDurationTime ()
