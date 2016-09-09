@@ -8,7 +8,8 @@ public class Impact_Effects : NetworkBehaviour {
 	private GameObject cam;
 
 	[SyncVar]
-	public float carhealth = 100.0f;
+	public float carhealth;
+	public float maxCarHealth = 100.0f;
 
 	private float damageConstant = 1.0f;
 
@@ -16,6 +17,8 @@ public class Impact_Effects : NetworkBehaviour {
 	void Start () {
 		minimap = GameObject.Find ("MiniMap").gameObject;
 		cam = GameObject.FindGameObjectWithTag ("MainCamera").gameObject;
+
+		carhealth = maxCarHealth;
 	}
 	
 	// Update is called once per frame

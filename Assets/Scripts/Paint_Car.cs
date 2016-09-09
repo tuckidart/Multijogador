@@ -45,15 +45,16 @@ public class Paint_Car : NetworkBehaviour {
 			}
 			else if(hit.gameObject.name == "colliderToChangeTexture" && canPaint)
 			{
-					//aqui rola um sorteio atraves da lista de textura e escolhe uma aleatoria que não seja a textura atual
-					int randTex;
-					do
-						randTex = Random.Range (0, textureList.Count);
-					while (randTex == currentTexture);
+				//aqui rola um sorteio atraves da lista de textura e escolhe uma aleatoria que não seja a textura atual
+				int randTex;
+				do
+					randTex = Random.Range (0, textureList.Count);
+				while (randTex == currentTexture);
 
-					CmdPaint (randTex);
-					canPaint = false;
-					autoRepairAudioSource.Play ();
+				CmdPaint (randTex);
+				GetComponent<Impact_Effects> ().carhealth = GetComponent<Impact_Effects> ().maxCarHealth;
+				canPaint = false;
+				autoRepairAudioSource.Play ();
 			}	
 		}
 	}
