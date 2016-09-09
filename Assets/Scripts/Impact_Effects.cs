@@ -30,7 +30,7 @@ public class Impact_Effects : NetworkBehaviour {
 	{
 		if (isLocalPlayer)
 		{
-			if (hit.relativeVelocity.magnitude > 10.0f)
+			if (hit.relativeVelocity.magnitude > 10.0f && hit.gameObject.name != "Ground")
 			{
 				//audio de batida
 				minimap.GetComponent<bl_MiniMap> ().DoHitEffect ();

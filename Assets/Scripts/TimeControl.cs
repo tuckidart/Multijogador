@@ -23,7 +23,7 @@ public class TimeControl : MonoBehaviour {
 		} 
 		else 
 		{
-			Debug.Log (durationTime - Time.time + startTime);
+			//Debug.Log (durationTime - Time.time + startTime);
 		}	
 	}
 

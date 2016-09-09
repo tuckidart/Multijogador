@@ -17,6 +17,6 @@ public class ObjectivesController : MonoBehaviour {
 
 	public void CheckObjetiveVariables ()
 	{
-		Debug.Log ("Game ended");
+		//Debug.Log ("Game ended");
 	}
 }
