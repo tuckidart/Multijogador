@@ -3,9 +3,21 @@ using System.Collections;
 using UnityEngine.Networking;
 
 public class Impact_Effects : NetworkBehaviour {
-
+	
 	private GameObject minimap;
 	private GameObject cam;
+
+	public Transform smokeTransform;
+	public GameObject smokeLowPrefab;
+	public GameObject smokeHighPrefab;
+	public GameObject firePrefab;
+
+	//variaveis auxiliares de controle de partículas
+	private GameObject particle;
+	private bool createdSmokeLow = false;
+	private bool createdSmokeHigh = false;
+	private bool createdFire = false;
+	///////////////////////////////////////
 
 	[SyncVar]
 	public float carhealth;
@@ -39,10 +51,7 @@ public class Impact_Effects : NetworkBehaviour {
 			}
 		}
 
-		if(carhealth < 0)
-		{
-			DestroyCar ();
-		}
+		//CmdCreateParticle ();
 	}
 		
 	void DestroyCar()
@@ -51,5 +60,45 @@ public class Impact_Effects : NetworkBehaviour {
 		//gameObject.GetComponent<vehicleController>().alive = false;
 
 		//Destroy (gameObject);
+	}
+
+	public void ResetDamageParticles()
+	{
+		Destroy (particle);
+		createdSmokeLow = false;
+		createdSmokeHigh = false;
+		createdFire = false;
+	}
+
+	[Command]
+	void CmdCreateParticle()
+	{
+		if(carhealth < 70 && !createdSmokeLow)
+		{
+			particle = Instantiate (smokeLowPrefab, smokeTransform.position, Quaternion.identity) as GameObject;
+			particle.transform.SetParent (gameObject.transform);
+			createdSmokeLow = true;
+			NetworkServer.Spawn (particle);
+		}
+		else if(carhealth < 50 && !createdSmokeHigh)
+		{
+			Destroy (particle);
+			particle = Instantiate (smokeHighPrefab, smokeTransform.position, Quaternion.identity) as GameObject;
+			particle.transform.SetParent (gameObject.transform);
+			createdSmokeHigh = true;
+			NetworkServer.Spawn (particle);
+		}
+		else if(carhealth < 25 && !createdFire)
+		{
+			Destroy (particle);
+			particle = Instantiate (firePrefab, smokeTransform.position, Quaternion.identity) as GameObject;
+			particle.transform.SetParent (gameObject.transform);
+			createdFire = true;
+			NetworkServer.Spawn (particle);
+		}
+		else if(carhealth < 0)
+		{
+			DestroyCar ();
+		}
 	}
 }

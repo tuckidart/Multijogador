@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 
 public class Paint_Car : NetworkBehaviour {
 
+	private Impact_Effects damageEffects;
 	public GameObject carBody;
 	private AudioSource autoRepairAudioSource;
 	private GameObject doorCol;
@@ -19,6 +20,7 @@ public class Paint_Car : NetworkBehaviour {
 
 	void Start()
 	{
+		damageEffects = GetComponent<Impact_Effects> ();
 		canPaint = true;
 		for (int i = 0; i < textureList.Count; i++) {
 			textures.Add (i, textureList [i]);
@@ -52,7 +54,8 @@ public class Paint_Car : NetworkBehaviour {
 				while (randTex == currentTexture);
 
 				CmdPaint (randTex);
-				GetComponent<Impact_Effects> ().carhealth = GetComponent<Impact_Effects> ().maxCarHealth;
+				damageEffects.carhealth = damageEffects.maxCarHealth;
+				damageEffects.ResetDamageParticles ();
 				canPaint = false;
 				autoRepairAudioSource.Play ();
 			}	
