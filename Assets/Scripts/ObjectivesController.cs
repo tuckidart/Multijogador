@@ -3,20 +3,47 @@ using System.Collections;
 
 public class ObjectivesController : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () 
+	public bool fugitiveWon;
+	public bool copWon;
+
+	public void SetCopWon ()
 	{
-		
-	}
-	
-	// Update is called once per frame
-	void Update () 
-	{
-		
+		copWon = true;
 	}
 
-	public void CheckObjetiveVariables ()
+	public void SetFujitiveWon ()
 	{
-		//Debug.Log ("Game ended");
+		fugitiveWon = true;
+		DoTimerOverActions ();
+	}
+
+	public void DoTimerOverActions ()
+	{
+		//Fugitive got away successfuly
+		if (fugitiveWon) 
+		{
+			DoFugitiveWinActions ();
+		} 
+		//Cop captured fugitive
+		else if (copWon) 
+		{
+			DoCopWinActions ();
+		}
+		//Time is over and fugitive couldnt get away
+		else 
+		{
+			copWon = true;
+			DoCopWinActions ();
+		}
+	}
+
+	private void DoCopWinActions ()
+	{
+		Debug.Log ("Cop won");
+	}
+
+	private void DoFugitiveWinActions ()
+	{
+		Debug.Log ("Fugitive won");
 	}
 }

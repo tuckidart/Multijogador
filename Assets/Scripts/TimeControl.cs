@@ -32,6 +32,6 @@ public class TimeControl : MonoBehaviour {
 		//Test for conditions
 		//Time.timeScale = 0;
 
-		_GameMaster.GM.myObjectivesController.CheckObjetiveVariables ();
+		_GameMaster.GM.myObjectivesController.DoTimerOverActions ();
 	}
 }
