@@ -44,8 +44,6 @@ public class PlayerSetup : NetworkBehaviour {
 	[Command]
 	public void CmdCreatePoint(bl_MMItemInfo item)
 	{
-		//minimap.GetComponent<bl_MiniMap> ().CreateNewItem (item);
-
 		GameObject newItem;
 
 		if(gameObject.tag == "Cop")
