@@ -26,9 +26,9 @@ public class Paint_Car : NetworkBehaviour {
 			textures.Add (i, textureList [i]);
 		}
 
-		if(isLocalPlayer)
+		if(isClient && isLocalPlayer)
 		{				
-			if (gameObject.tag == "Suspect") 
+			if (gameObject.tag == "Suspect")
 			{
 				int randTex = Random.Range (0, textureList.Count);
 				CmdPaint (randTex);
@@ -54,8 +54,7 @@ public class Paint_Car : NetworkBehaviour {
 				while (randTex == currentTexture);
 
 				CmdPaint (randTex);
-				damageEffects.carhealth = damageEffects.maxCarHealth;
-				damageEffects.ResetDamageParticles ();
+				damageEffects.ResetDamage();
 				canPaint = false;
 				autoRepairAudioSource.Play ();
 			}	

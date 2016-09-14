@@ -62,12 +62,13 @@ public class Impact_Effects : NetworkBehaviour {
 		//Destroy (gameObject);
 	}
 
-	public void ResetDamageParticles()
+	public void ResetDamage()
 	{
 		Destroy (particle);
 		createdSmokeLow = false;
 		createdSmokeHigh = false;
 		createdFire = false;
+		carhealth = maxCarHealth;
 	}
 
 	[Command]
