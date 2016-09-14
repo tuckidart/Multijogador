@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class bl_MMItemInfo : MonoBehaviour
+public class bl_MMItemInfo
 {
     //Requiered
     //Position where new item was instantiate

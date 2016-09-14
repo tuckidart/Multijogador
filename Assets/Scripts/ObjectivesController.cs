@@ -29,7 +29,7 @@ public class ObjectivesController : MonoBehaviour {
 		{
 			DoCopWinActions ();
 		}
-		//Time is over and fugitive couldnt get away
+		//Time is over and fugitive couldn't get away
 		else 
 		{
 			copWon = true;

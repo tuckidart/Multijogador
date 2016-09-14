@@ -3,8 +3,8 @@ using UnityEngine.Networking;
 
 public class PlayerSetup : NetworkBehaviour {
 
-	bl_MMItemInfo myPosition;
-
+	public GameObject suspectPointPrefab;
+	public GameObject policePointPrefab;
 	private GameObject minimap;
 
 	[SerializeField]
@@ -12,13 +12,13 @@ public class PlayerSetup : NetworkBehaviour {
 
 	void Start()
 	{
-		if(!isLocalPlayer)
+		if (!base.isLocalPlayer)
 		{
-			for(int i=0;i<componentsToDisable.Length;i++)
+			for (int i = 0; i < componentsToDisable.Length; i++)
 			{
-				componentsToDisable[i].enabled = false;
+				componentsToDisable [i].enabled = false;
 			}
-		}
+		} 
 		else
 		{
 			minimap = GameObject.Find ("MiniMap").gameObject;
@@ -33,18 +33,27 @@ public class PlayerSetup : NetworkBehaviour {
 			{
 				minimap.GetComponent<bl_MiniMap> ().LevelName = "Objective - Blend in and escape!";
 			}
-
-			myPosition = GetComponent<bl_MMItemInfo> ();
-			myPosition.Position = transform.position;
-			myPosition.Size = 15;
-			myPosition.Color = new Color (1, 1, 0);
-			CmdCreatePoint ();
 		}
-	}
 
+		bl_MMItemInfo myPosition = new bl_MMItemInfo(transform.position);
+
+		if(isServer)
+			CmdCreatePoint (myPosition);
+	}
+		
 	[Command]
-	void CmdCreatePoint()
+	public void CmdCreatePoint(bl_MMItemInfo item)
 	{
-		minimap.GetComponent<bl_MiniMap> ().CreateNewItem (myPosition);
+		//minimap.GetComponent<bl_MiniMap> ().CreateNewItem (item);
+
+		GameObject newItem;
+
+		if(gameObject.tag == "Cop")
+			newItem = Instantiate (policePointPrefab, item.Position, Quaternion.identity) as GameObject;
+		else
+			newItem = Instantiate (suspectPointPrefab, item.Position, Quaternion.identity) as GameObject;
+		//bl _MiniMapItem mmItem = newItem.GetComponent<bl_MiniMapItem> ();
+
+		NetworkServer.Spawn (newItem);
 	}
 }

@@ -582,7 +582,7 @@ public class bl_MiniMap : NetworkBehaviour
         mmItem.m_Effect = item.Effect;
 		mmItem.InfoItem = "";
         if (item.Sprite != null) { mmItem.Icon = item.Sprite; }
-		NetworkServer.Spawn (newItem);
+		NetworkServer.Spawn(newItem);
     }
 
     /// <summary>
