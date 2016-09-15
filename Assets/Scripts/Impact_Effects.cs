@@ -50,7 +50,7 @@ public class Impact_Effects : NetworkBehaviour {
 				carhealth -= damageConstant * hit.relativeVelocity.magnitude;
 			}
 		}
-
+			
 		//CmdCreateParticle ();
 	}
 		
@@ -72,12 +72,12 @@ public class Impact_Effects : NetworkBehaviour {
 	}
 
 	[Command]
-	void CmdCreateParticle()
+	public void CmdCreateParticle()
 	{
 		if(carhealth < 70 && !createdSmokeLow)
 		{
 			particle = Instantiate (smokeLowPrefab, smokeTransform.position, Quaternion.identity) as GameObject;
-			particle.transform.SetParent (gameObject.transform);
+			particle.transform.parent = transform;
 			createdSmokeLow = true;
 			NetworkServer.Spawn (particle);
 		}
@@ -85,7 +85,7 @@ public class Impact_Effects : NetworkBehaviour {
 		{
 			Destroy (particle);
 			particle = Instantiate (smokeHighPrefab, smokeTransform.position, Quaternion.identity) as GameObject;
-			particle.transform.SetParent (gameObject.transform);
+			particle.transform.parent = transform;
 			createdSmokeHigh = true;
 			NetworkServer.Spawn (particle);
 		}
@@ -93,12 +93,13 @@ public class Impact_Effects : NetworkBehaviour {
 		{
 			Destroy (particle);
 			particle = Instantiate (firePrefab, smokeTransform.position, Quaternion.identity) as GameObject;
-			particle.transform.SetParent (gameObject.transform);
+			particle.transform.parent = transform;
 			createdFire = true;
 			NetworkServer.Spawn (particle);
 		}
-		else if(carhealth < 0)
+		else if(carhealth <= 0)
 		{
+			carhealth = 0;
 			DestroyCar ();
 		}
 	}
