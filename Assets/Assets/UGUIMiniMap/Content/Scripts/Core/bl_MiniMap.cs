@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 
 public class bl_MiniMap : NetworkBehaviour
 {
+	public RectTransform Background;
     [Separator("General Settings")]
     // Target for the minimap.
     public GameObject m_Target;

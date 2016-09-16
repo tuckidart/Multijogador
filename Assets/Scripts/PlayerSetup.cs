@@ -58,6 +58,6 @@ public class PlayerSetup : NetworkBehaviour {
 	void DestroyPoint()
 	{
 		Destroy (newItem);
-		newItem.GetComponent<bl_MiniMapItem> ().RpcDestroyItem(true);
+		newItem.GetComponent<bl_MiniMapItem>().RpcDestroyItem(true);
 	}
 }

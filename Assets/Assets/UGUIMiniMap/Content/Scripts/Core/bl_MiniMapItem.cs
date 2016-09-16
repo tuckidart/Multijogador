@@ -228,7 +228,6 @@ public class bl_MiniMapItem : NetworkBehaviour {
         }
         else
         {
-			//Graphic.GetComponent<bl_IconItem>().DestroyIcon(inmediate);
             Graphic.GetComponent<bl_IconItem>().DestroyIcon(inmediate,DeathIcon);
         }
     }

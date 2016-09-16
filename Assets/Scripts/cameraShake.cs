@@ -9,13 +9,13 @@ public class cameraShake : MonoBehaviour {
 	private float shakeDecay;
 	private float shakeIntensity;
 
-	void OnGUI()
+	/*void OnGUI()
 	{
 		if(GUI.Button (new Rect (20,40,80,20), "Shake"))
 		{
 			Shake ();
 		}
-	}
+	}*/
 	
 	// Update is called once per frame
 	void Update () {

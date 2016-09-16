@@ -40,7 +40,7 @@ public class Impact_Effects : NetworkBehaviour {
 
 	void OnCollisionEnter(Collision hit)
 	{
-		if (hit.relativeVelocity.magnitude > 10.0f && hit.gameObject.name != "Ground")
+		if (hit.relativeVelocity.magnitude > 10.0f && hit.gameObject.name != "Ground" && hit.gameObject.name != "Curb" )
 		{
 			carhealth -= damageConstant * hit.relativeVelocity.magnitude;
 
