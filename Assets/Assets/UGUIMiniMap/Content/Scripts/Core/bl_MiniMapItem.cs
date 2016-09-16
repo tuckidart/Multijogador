@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.Networking;
 
-public class bl_MiniMapItem : MonoBehaviour {
+public class bl_MiniMapItem : NetworkBehaviour {
 
     [Separator("TARGET")]
     [Tooltip("UI Prefab")]
@@ -68,7 +69,7 @@ public class bl_MiniMapItem : MonoBehaviour {
     void CreateIcon()
     {
         //Instantiate UI in canvas
-        cacheItem = Instantiate(GraphicPrefab) as GameObject;
+		cacheItem = Instantiate(GraphicPrefab, Vector3.zero, Quaternion.identity) as GameObject;
         RectRoot = bl_MiniMapUtils.GetMiniMap().MMUIRoot;
         //SetUp Icon UI
         Graphic = cacheItem.GetComponent<Image>();
@@ -212,12 +213,13 @@ public class bl_MiniMapItem : MonoBehaviour {
     /// or destroy inmediate
     /// </summary>
     /// <param name="inmediate"></param>
-    public void DestroyItem(bool inmediate)
+	[ClientRpc]
+    public void RpcDestroyItem(bool inmediate)
     {
         if (Graphic == null)
         {
             Debug.Log("Graphic Item of " + this.name + " not exist in scene");
-            return;
+           	return;
         }
 
         if (DeathIcon == null || inmediate)
@@ -226,6 +228,7 @@ public class bl_MiniMapItem : MonoBehaviour {
         }
         else
         {
+			//Graphic.GetComponent<bl_IconItem>().DestroyIcon(inmediate);
             Graphic.GetComponent<bl_IconItem>().DestroyIcon(inmediate,DeathIcon);
         }
     }

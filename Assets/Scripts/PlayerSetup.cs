@@ -2,6 +2,8 @@
 using UnityEngine.Networking;
 
 public class PlayerSetup : NetworkBehaviour {
+	
+	private GameObject newItem;
 
 	public GameObject suspectPointPrefab;
 	public GameObject policePointPrefab;
@@ -38,14 +40,12 @@ public class PlayerSetup : NetworkBehaviour {
 		bl_MMItemInfo myPosition = new bl_MMItemInfo(transform.position);
 
 		if(isServer)
-			CmdCreatePoint (myPosition);
+			CmdCreateInitialPoint (myPosition);
 	}
 		
 	[Command]
-	public void CmdCreatePoint(bl_MMItemInfo item)
+	public void CmdCreateInitialPoint(bl_MMItemInfo item)
 	{
-		GameObject newItem;
-
 		if(gameObject.tag == "Cop")
 			newItem = Instantiate (policePointPrefab, item.Position, Quaternion.identity) as GameObject;
 		else
@@ -53,5 +53,11 @@ public class PlayerSetup : NetworkBehaviour {
 		//bl _MiniMapItem mmItem = newItem.GetComponent<bl_MiniMapItem> ();
 
 		NetworkServer.Spawn (newItem);
+		Invoke ("DestroyPoint", 5f);
+	}
+	void DestroyPoint()
+	{
+		Destroy (newItem);
+		newItem.GetComponent<bl_MiniMapItem> ().RpcDestroyItem(true);
 	}
 }

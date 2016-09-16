@@ -40,26 +40,45 @@ public class Impact_Effects : NetworkBehaviour {
 
 	void OnCollisionEnter(Collision hit)
 	{
-		if (isLocalPlayer)
+		if (hit.relativeVelocity.magnitude > 10.0f && hit.gameObject.name != "Ground")
 		{
-			if (hit.relativeVelocity.magnitude > 10.0f && hit.gameObject.name != "Ground")
+			carhealth -= damageConstant * hit.relativeVelocity.magnitude;
+
+			if (carhealth < 70 && !createdSmokeLow)
 			{
-				//audio de batida
+				if (isLocalPlayer)
+					CmdCreateParticle (1);
+				else if(isServer)
+					RpcCreateParticle (1);		
+				createdSmokeLow = true;
+			}
+			else if (carhealth < 40 && !createdSmokeHigh)
+			{
+				if (isLocalPlayer)
+					CmdCreateParticle (2);
+				else if(isServer)
+					RpcCreateParticle (2);
+				createdSmokeHigh = true;
+			}
+			else if (carhealth < 20 && !createdFire)
+			{
+				if (isLocalPlayer)
+					CmdCreateParticle (3);
+				else if(isServer)
+					RpcCreateParticle (3);
+				createdFire = true;
+			}
+			else if (carhealth <= 0)
+			{
+				carhealth = 0;
+			}
+		
+			if (isLocalPlayer)
+			{
 				minimap.GetComponent<bl_MiniMap> ().DoHitEffect ();
 				cam.GetComponent<cameraShake> ().Shake ();
-				carhealth -= damageConstant * hit.relativeVelocity.magnitude;
 			}
 		}
-			
-		//CmdCreateParticle ();
-	}
-		
-	void DestroyCar()
-	{
-		//fazer explosão, etc...
-		//gameObject.GetComponent<vehicleController>().alive = false;
-
-		//Destroy (gameObject);
 	}
 
 	public void ResetDamage()
@@ -71,36 +90,56 @@ public class Impact_Effects : NetworkBehaviour {
 		carhealth = maxCarHealth;
 	}
 
-	[Command]
-	public void CmdCreateParticle()
+	void DestroyCar()
 	{
-		if(carhealth < 70 && !createdSmokeLow)
+		//fazer explosão, etc...
+		//gameObject.GetComponent<vehicleController>().alive = false;
+
+		//Destroy (gameObject);
+	}
+
+	[Command]
+	public void CmdCreateParticle(int valor)
+	{		
+		if (particle != null)
+			Destroy (particle);
+		
+		switch(valor)
 		{
+		case 1:
 			particle = Instantiate (smokeLowPrefab, smokeTransform.position, Quaternion.identity) as GameObject;
-			particle.transform.parent = transform;
-			createdSmokeLow = true;
-			NetworkServer.Spawn (particle);
-		}
-		else if(carhealth < 50 && !createdSmokeHigh)
-		{
-			Destroy (particle);
+			break;
+		case 2:
 			particle = Instantiate (smokeHighPrefab, smokeTransform.position, Quaternion.identity) as GameObject;
-			particle.transform.parent = transform;
-			createdSmokeHigh = true;
-			NetworkServer.Spawn (particle);
-		}
-		else if(carhealth < 25 && !createdFire)
-		{
-			Destroy (particle);
+			break;
+		case 3:
 			particle = Instantiate (firePrefab, smokeTransform.position, Quaternion.identity) as GameObject;
-			particle.transform.parent = transform;
-			createdFire = true;
-			NetworkServer.Spawn (particle);
+			break;
 		}
-		else if(carhealth <= 0)
+
+		particle.transform.parent = transform;
+		NetworkServer.Spawn (particle);
+	}
+
+	[ClientRpc]
+	public void RpcCreateParticle(int valor)
+	{
+		if (particle != null)
+			Destroy (particle);
+		
+		switch(valor)
 		{
-			carhealth = 0;
-			DestroyCar ();
+		case 1:
+			particle = Instantiate (smokeLowPrefab, smokeTransform.position, Quaternion.identity) as GameObject;
+			break;
+		case 2:
+			particle = Instantiate (smokeHighPrefab, smokeTransform.position, Quaternion.identity) as GameObject;
+			break;
+		case 3:
+			particle = Instantiate (firePrefab, smokeTransform.position, Quaternion.identity) as GameObject;
+			break;
 		}
+
+		particle.transform.parent = transform;
 	}
 }
