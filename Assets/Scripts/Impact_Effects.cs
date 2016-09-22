@@ -44,35 +44,8 @@ public class Impact_Effects : NetworkBehaviour {
 		{
 			carhealth -= damageConstant * hit.relativeVelocity.magnitude;
 
-			if (carhealth < 70 && !createdSmokeLow)
-			{
-				if (isLocalPlayer)
-					CmdCreateParticle (1);
-				else if(isServer)
-					RpcCreateParticle (1);		
-				createdSmokeLow = true;
-			}
-			else if (carhealth < 40 && !createdSmokeHigh)
-			{
-				if (isLocalPlayer)
-					CmdCreateParticle (2);
-				else if(isServer)
-					RpcCreateParticle (2);
-				createdSmokeHigh = true;
-			}
-			else if (carhealth < 20 && !createdFire)
-			{
-				if (isLocalPlayer)
-					CmdCreateParticle (3);
-				else if(isServer)
-					RpcCreateParticle (3);
-				createdFire = true;
-			}
-			else if (carhealth <= 0)
-			{
-				carhealth = 0;
-			}
-		
+			CheckCarHealth ();
+
 			if (isLocalPlayer)
 			{
 				minimap.GetComponent<bl_MiniMap> ().DoHitEffect ();
@@ -96,6 +69,38 @@ public class Impact_Effects : NetworkBehaviour {
 		//gameObject.GetComponent<vehicleController>().alive = false;
 
 		//Destroy (gameObject);
+	}
+
+	void CheckCarHealth()
+	{
+		if (carhealth < 70 && !createdSmokeLow)
+		{
+			if (isLocalPlayer)
+				CmdCreateParticle (1);
+			else if(isServer)
+				RpcCreateParticle (1);		
+			createdSmokeLow = true;
+		}
+		else if (carhealth < 40 && !createdSmokeHigh)
+		{
+			if (isLocalPlayer)
+				CmdCreateParticle (2);
+			else if(isServer)
+				RpcCreateParticle (2);
+			createdSmokeHigh = true;
+		}
+		else if (carhealth < 20 && !createdFire)
+		{
+			if (isLocalPlayer)
+				CmdCreateParticle (3);
+			else if(isServer)
+				RpcCreateParticle (3);
+			createdFire = true;
+		}
+		else if (carhealth <= 0)
+		{
+			carhealth = 0;
+		}
 	}
 
 	[Command]
