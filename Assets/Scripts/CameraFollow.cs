@@ -11,7 +11,10 @@ public class CameraFollow : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		
-		if(player != null)
+		if (player != null)
+		{
+			//transform.LookAt (player.transform.position);
 			transform.position = new Vector3 (player.transform.position.x + offsetX, transform.position.y, player.transform.position.z - offsetZ);
+		}
 	}
 }
