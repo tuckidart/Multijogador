@@ -7,6 +7,7 @@ public class _GameMaster : MonoBehaviour {
 
 	public TimeControl myTimeControl;
 	public ObjectivesController myObjectivesController;
+	public ScapeController myScapeController;
 
 	void Awake () 
 	{
@@ -23,5 +24,6 @@ public class _GameMaster : MonoBehaviour {
 	{
 		myTimeControl = gameObject.GetComponent<TimeControl> ();
 		myObjectivesController = gameObject.GetComponent<ObjectivesController> ();
+		myScapeController = gameObject.GetComponent<ScapeController> ();
 	}
 }

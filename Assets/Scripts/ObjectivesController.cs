@@ -37,13 +37,35 @@ public class ObjectivesController : MonoBehaviour {
 		}
 	}
 
+	public void CallCarDied (bool isCop)
+	{
+		if (isCop)
+			DoCopWinActions ();
+		else
+			DoFugitiveWinActions ();
+	}
+
+	public void CallSupectScaped ()
+	{
+		if (fugitiveWon == false) 
+		{
+			DoFugitiveWinActions ();
+		}
+	}
+
 	private void DoCopWinActions ()
 	{
+		fugitiveWon = false;
+		copWon = true;
+
 		Debug.Log ("Cop won");
 	}
 
 	private void DoFugitiveWinActions ()
 	{
-		Debug.Log ("Fugitive won");
+		fugitiveWon = true;
+		copWon = false;
+
+		Debug.Log ("Suspect Won");
 	}
 }

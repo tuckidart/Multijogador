@@ -18,6 +18,7 @@ public class TimeControl : MonoBehaviour {
 	void Awake () 
 	{
 		startTime = Time.time;
+		//Debug.Log (durationTime);
 	}
 
 	void Update ()
