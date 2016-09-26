@@ -14,22 +14,28 @@ public class TimeControl : MonoBehaviour {
 	private int minutes;
 	private int seconds;
 
+	private bool timeOver;
+
 	// Use this for initialization
 	void Awake () 
 	{
+		timeOver = false;
 		startTime = Time.time;
 		//Debug.Log (durationTime);
 	}
 
 	void Update ()
 	{
-		if (Time.time >= startTime + durationTime) 
+		if(!timeOver)
 		{
-			FireEndOfDurationTime ();
-		} 
-		else 
-		{
-			UpdateTimeUI ();
+			if (Time.time >= startTime + durationTime) 
+			{
+				FireEndOfDurationTime ();
+			} 
+			else
+			{
+				UpdateTimeUI ();
+			}
 		}
 	}
 
@@ -39,6 +45,7 @@ public class TimeControl : MonoBehaviour {
 		//Time.timeScale = 0;
 
 		_GameMaster.GM.myObjectivesController.DoTimerOverActions ();
+		timeOver = true;
 	}
 
 	private void UpdateTimeUI ()

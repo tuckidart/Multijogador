@@ -20,17 +20,17 @@ public class ObjectivesController : MonoBehaviour {
 	public void DoTimerOverActions ()
 	{
 		//Fugitive got away successfuly
-		if (fugitiveWon) 
+		if (fugitiveWon)
 		{
 			DoFugitiveWinActions ();
 		} 
 		//Cop captured fugitive
-		else if (copWon) 
+		else if (copWon)
 		{
 			DoCopWinActions ();
 		}
 		//Time is over and fugitive couldn't get away
-		else 
+		else
 		{
 			copWon = true;
 			DoCopWinActions ();
@@ -39,7 +39,7 @@ public class ObjectivesController : MonoBehaviour {
 
 	public void CallCarDied (bool isCop)
 	{
-		if (isCop)
+		if (!isCop)
 			DoCopWinActions ();
 		else
 			DoFugitiveWinActions ();

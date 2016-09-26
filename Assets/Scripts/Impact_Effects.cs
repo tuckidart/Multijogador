@@ -66,7 +66,13 @@ public class Impact_Effects : NetworkBehaviour {
 	void DestroyCar()
 	{
 		//fazer explosão, etc...
-		//gameObject.GetComponent<vehicleController>().alive = false;
+		gameObject.GetComponent<vehicleController>().alive = false;
+		carhealth = 0;
+
+		if (gameObject.tag == "Cop")
+			_GameMaster.GM.myObjectivesController.CallCarDied (true);
+		else if (gameObject.tag == "Suspect")
+			_GameMaster.GM.myObjectivesController.CallCarDied (false);
 
 		//Destroy (gameObject);
 	}
@@ -99,12 +105,7 @@ public class Impact_Effects : NetworkBehaviour {
 		}
 		else if (carhealth <= 0)
 		{
-			carhealth = 0;
-
-			if (gameObject.tag == "Cop")
-				_GameMaster.GM.myObjectivesController.CallCarDied (true);
-			else if (gameObject.tag == "Suspect")
-				_GameMaster.GM.myObjectivesController.CallCarDied (false);
+			DestroyCar ();
 		}
 	}
 
