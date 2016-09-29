@@ -13,10 +13,9 @@ public class ScapeController : NetworkBehaviour {
 	private float startTime;
 	private bool scapeIsOpen;
 
-	//[SyncVar (hook = "SetScapeIndex")]
-	public int currentScapeIndex;
+	private int currentScapeIndex;
 
-	public int tempIndex;
+	private int tempIndex;
 
 	private bool lateStartCalled;
 
