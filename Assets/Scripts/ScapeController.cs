@@ -12,7 +12,11 @@ public class ScapeController : NetworkBehaviour {
 	private int durationTime;
 	private float startTime;
 	private bool scapeIsOpen;
-	public int currentScapeIndex = 10;
+
+	//[SyncVar (hook = "SetScapeIndex")]
+	public int currentScapeIndex;
+
+	public int tempIndex;
 
 	private bool lateStartCalled;
 
@@ -24,7 +28,9 @@ public class ScapeController : NetworkBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-		//ChooseCurrentScape ();
+		if(isServer)
+			ChooseCurrentScape ();
+		
 		StartCoroutine (LateStart ());
 	}
 	
@@ -42,13 +48,14 @@ public class ScapeController : NetworkBehaviour {
 
 	void ChooseCurrentScape ()
 	{
-		currentScapeIndex = Random.Range (0, scapePositions.Count);
+		tempIndex = Random.Range (0, scapePositions.Count);
+		RpcChangeIndex ();
 	}
 
 	void SetScapeToOpen ()
 	{
 		scapeIsOpen = true;
-		//scapePositions [currentScapeIndex].SetActive (true);
+
 		CmdIntantiatePrefab();
 		
 		Debug.Log ("Opened the Scape");
@@ -57,17 +64,15 @@ public class ScapeController : NetworkBehaviour {
 	[Command]
 	void CmdIntantiatePrefab()
 	{
-		RpcChangePositionIndex ();
-
 		GameObject temp = Instantiate (scapePrefab, scapePositions[currentScapeIndex].position, Quaternion.identity) as GameObject;
-
+		
 		NetworkServer.Spawn (temp);
 	}
 
 	[ClientRpc]
-	void RpcChangePositionIndex()
+	void RpcChangeIndex()
 	{
-		ChooseCurrentScape ();
+		currentScapeIndex = tempIndex;
 	}
 
 	private IEnumerator LateStart ()

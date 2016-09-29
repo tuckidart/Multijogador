@@ -44,7 +44,7 @@ public class Impact_Effects : NetworkBehaviour {
 		{
 			carhealth -= damageConstant * hit.relativeVelocity.magnitude;
 
-			CheckCarHealth ();
+			//CheckCarHealth ();
 
 			if (isLocalPlayer)
 			{
