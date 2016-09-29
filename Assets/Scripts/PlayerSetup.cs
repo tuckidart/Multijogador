@@ -20,7 +20,7 @@ public class PlayerSetup : NetworkBehaviour {
 			{
 				componentsToDisable [i].enabled = false;
 			}
-		} 
+		}
 		else
 		{
 			minimap = GameObject.Find ("MiniMap").gameObject;
