@@ -1,18 +1,16 @@
 ﻿using UnityEngine;
-using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
 
-public class ScapeController : NetworkBehaviour {
+public class ScapeController : MonoBehaviour {
 
 	public int timeToScape;
-	public GameObject scapePointPrefab;
-	public List<Transform> scapePositions;
+	public List<GameObject> scapeObjects;
 
 	private int durationTime;
 	private float startTime;
 	private bool scapeIsOpen;
-	private int currentScapePointIndex;
+	private int currentScapeObjectIndex;
 
 	private bool lateStartCalled;
 
@@ -24,10 +22,7 @@ public class ScapeController : NetworkBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-		if (!isServer)
-			return;
-		
-		//ChooseCurrentScape ();
+		ChooseCurrentScape ();
 		StartCoroutine (LateStart ());
 	}
 	
@@ -45,38 +40,15 @@ public class ScapeController : NetworkBehaviour {
 
 	void ChooseCurrentScape ()
 	{
-		currentScapePointIndex = Random.Range (0, scapePositions.Count);
+		currentScapeObjectIndex = Random.Range (0, scapeObjects.Count);
 	}
 
 	void SetScapeToOpen ()
 	{
 		scapeIsOpen = true;
+		scapeObjects [currentScapeObjectIndex].SetActive (true);
 
-		if (isServer) 
-		{
-			//scapePositions [currentScapePointIndex].gameObject.SetActive (true);
-			CmdInstantiateScapeObject ();
-
-			Debug.Log ("Opened the Scape");
-		}
-	}
-
-	[Command]
-	void CmdInstantiateScapeObject ()
-	{
-		RpcSetCurrentScape ();
-
-		GameObject tempPoint;
-
-		tempPoint = Instantiate (scapePointPrefab, scapePositions [currentScapePointIndex].position, Quaternion.identity) as GameObject;
-
-		NetworkServer.Spawn (tempPoint);
-	}
-
-	[ClientRpc]
-	void RpcSetCurrentScape ()
-	{
-		ChooseCurrentScape ();
+		Debug.Log ("Opened the Scape");
 	}
 
 	private IEnumerator LateStart ()
