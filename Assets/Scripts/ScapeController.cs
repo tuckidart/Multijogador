@@ -57,7 +57,7 @@ public class ScapeController : NetworkBehaviour {
 
 		CmdIntantiatePrefab();
 		
-		Debug.Log ("Opened the Scape");
+		//Debug.Log ("Opened the Scape");
 	}
 
 	[Command]
