@@ -224,10 +224,12 @@ public class bl_MiniMapItem : NetworkBehaviour {
 
         if (DeathIcon == null || inmediate)
         {
+			transform.SetParent (cacheItem.transform, false);
             Graphic.GetComponent<bl_IconItem>().DestroyIcon(inmediate);
         }
         else
         {
+			transform.SetParent (cacheItem.transform, false);
             Graphic.GetComponent<bl_IconItem>().DestroyIcon(inmediate,DeathIcon);
         }
     }

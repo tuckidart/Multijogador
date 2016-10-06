@@ -33,15 +33,18 @@ public class CrimeSystem : NetworkBehaviour {
 	public void CmdCreateCrimePoint(bl_MMItemInfo item)
 	{
 		GameObject temp = Instantiate (crimePointPrefab, item.Position, Quaternion.identity) as GameObject;
+
 		newItem.Add(temp);
 
 		NetworkServer.Spawn (temp);
-		Invoke ("DestroyPoint", 8f);
+		Invoke ("DestroyPoint", 8.0f);
 	}
 	void DestroyPoint()
 	{
-		newItem[0].GetComponent<bl_MiniMapItem>().RpcDestroyItem(true);
-		Destroy (newItem[0].gameObject);
+		GameObject temp = newItem [0].gameObject;
+
 		newItem.RemoveAt(0);
+
+		temp.GetComponent<bl_MiniMapItem>().RpcDestroyItem(true);
 	}
 }
