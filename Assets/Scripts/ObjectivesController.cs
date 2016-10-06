@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class ObjectivesController : MonoBehaviour {
 
 	public bool fugitiveWon;
 	public bool copWon;
+
+	public Text endGameText;
 
 	public void SetCopWon ()
 	{
@@ -58,7 +61,10 @@ public class ObjectivesController : MonoBehaviour {
 		fugitiveWon = false;
 		copWon = true;
 
-		Debug.Log ("Cop won");
+		endGameText.transform.parent.gameObject.SetActive (true);
+		endGameText.text = "Cop won";
+
+		Time.timeScale = 0;
 	}
 
 	private void DoFugitiveWinActions ()
@@ -66,6 +72,9 @@ public class ObjectivesController : MonoBehaviour {
 		fugitiveWon = true;
 		copWon = false;
 
-		Debug.Log ("Suspect Won");
+		endGameText.transform.parent.gameObject.SetActive (true);
+		endGameText.text = "Fugitive won";
+
+		Time.timeScale = 0;
 	}
 }
