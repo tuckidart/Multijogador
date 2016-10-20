@@ -4,6 +4,7 @@ using System.Collections;
 public class Open_Door : MonoBehaviour {
 
 	private Vector3 originalPosition;
+	private Quaternion originalRotation;
 	public Transform door;
 	public Transform doorTarget;
 	public float speed;
@@ -14,6 +15,7 @@ public class Open_Door : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		originalPosition = door.position;
+		originalRotation = door.rotation;
 		openDoor = false;
 		closeDoor = false;
 	}
@@ -32,7 +34,7 @@ public class Open_Door : MonoBehaviour {
 		if (closeDoor)
 		{
 			door.position = Vector3.Lerp (door.position, originalPosition, speed * Time.deltaTime);
-			door.rotation = Quaternion.Lerp (door.rotation, Quaternion.identity, speed * Time.deltaTime);
+			door.rotation = Quaternion.Lerp (door.rotation, originalRotation, speed * Time.deltaTime);
 			if (door.position == originalPosition)
 			{
 				closeDoor = false;
