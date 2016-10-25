@@ -2,7 +2,8 @@
 using UnityEngine.Networking;
 
 public class PlayerSetup : NetworkBehaviour {
-	
+	public Camera cam;
+
 	private GameObject newItem;
 
 	public GameObject suspectPointPrefab;
@@ -11,6 +12,16 @@ public class PlayerSetup : NetworkBehaviour {
 
 	[SerializeField]
 	Behaviour[] componentsToDisable;
+
+	public override void OnStartLocalPlayer ()
+	{
+		cam = Camera.main;
+		//cam.GetComponent<cam>().carObj = this.gameObject;
+		cam.GetComponent<CameraFollow>().player = this.gameObject;
+		cam.GetComponent<CameraFollow> ().enabled = true;
+		cam.GetComponent<transparentBuildings> ().enabled = true;
+		cam.GetComponent<transparentBuildings> ().player = this.gameObject;
+	}
 
 	void Start()
 	{
