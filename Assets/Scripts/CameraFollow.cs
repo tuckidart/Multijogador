@@ -26,18 +26,22 @@ public class CameraFollow : MonoBehaviour {
 
 	void Update () {
 		
-		if (player != null)
-		{
+		if (player != null) {
 			//transform.LookAt (player.transform.position);
 			transform.position = new Vector3 (player.transform.position.x + offsetX, transform.position.y, player.transform.position.z - offsetZ);
-		}
 
+			fovEffect ();
+		}
+	}
+
+	void fovEffect()
+	{
 		//pinch camera based on speed of vehicle//
-		float fov = initFOV + (player.GetComponent<vehicleController>().zVel*FieldOfViewEffect);
-		Mathf.Clamp(fov, initFOV, 169.9f);
+		float fov = initFOV + (player.GetComponent<vehicleController> ().zVel * FieldOfViewEffect);
+		Mathf.Clamp (fov, initFOV, 169.9f);
 
 		myCam.fieldOfView = fov;
-		if(myCam.fieldOfView > 169.9f)
+		if (myCam.fieldOfView > 169.9f)
 		{
 			myCam.fieldOfView = 169.9f;
 		}
