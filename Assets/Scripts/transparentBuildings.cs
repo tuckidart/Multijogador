@@ -12,6 +12,7 @@ public class transparentBuildings : MonoBehaviour {
 
 	private Renderer rend;
 	private bool transparent;
+
 	// Update is called once per frame
 	void Update () {
 		

@@ -9,7 +9,6 @@ public class CameraFollow : MonoBehaviour {
 	public float offsetZ;
 
 	[Range(0f,3f)]
-	[ContextMenuItem("Reset 'Field Of View Effect' to default", "resetFieldOfViewEffect")]
 	public float FieldOfViewEffect = 0f;
 
 	public float speedEffect = 0f;
