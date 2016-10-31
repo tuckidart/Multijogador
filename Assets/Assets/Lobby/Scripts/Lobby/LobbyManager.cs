@@ -439,13 +439,13 @@ namespace Prototype.NetworkLobby
 
 			if (index == 0)
 			{
-				GameObject _temp = (GameObject)GameObject.Instantiate (spawnPrefabs [index], startPositions [conn.connectionId].position, Quaternion.identity);
+				GameObject _temp = (GameObject)GameObject.Instantiate (spawnPrefabs [index], startPositions [conn.connectionId].position, startPositions [conn.connectionId].rotation);
 				return _temp;
 			}
 			else
 			{
 				int rand = Random.Range(1, 5);
-				GameObject _temp = (GameObject)GameObject.Instantiate (spawnPrefabs [rand], startPositions [conn.connectionId].position, Quaternion.identity);
+				GameObject _temp = (GameObject)GameObject.Instantiate (spawnPrefabs [rand], startPositions [conn.connectionId].position, startPositions [conn.connectionId].rotation);
 				return _temp;
 			}
 		}
