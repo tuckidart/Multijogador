@@ -9,10 +9,19 @@ public enum ObstacleType
 public class SensorScript : MonoBehaviour {
 
 	private State myCarState;
+	private BoxCollider sensorSize;
 
 	void Start () 
 	{
+		sensorSize = GetComponent<BoxCollider> ();
 		myCarState = transform.parent.GetComponent<State>();
+	}
+
+	void Update()
+	{
+		
+//		sensorSize.size += new Vector3(0.0f, 0.0f, 0.1f);
+//		sensorSize.center += new Vector3(0.0f, 0.0f, 0.1f);
 	}
 
 	void OnTriggerEnter (Collider other)

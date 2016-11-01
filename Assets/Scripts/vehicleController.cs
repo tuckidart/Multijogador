@@ -108,7 +108,7 @@ public class vehicleController : NetworkBehaviour {
 	[HideInInspector]
 	[SyncVar]
 	public float inputX;
-	[HideInInspector]
+	//[HideInInspector]
 	public float inputY;
 	private float xVel;
 	[HideInInspector]
@@ -682,6 +682,16 @@ public class vehicleController : NetworkBehaviour {
 			inputX = Mathf.SmoothStep(inputX,Input.GetAxis("Horizontal"),(steering*0.2f)*Time.deltaTime);
 			inputY = Input.GetAxis("Vertical");
 		}
+
+		if (inputX >= 1.0f)
+			inputX = 1.0f;
+		else if (inputX <= -1.0f)
+			inputX = -1.0f;
+
+		if (inputY >= 1.0f)
+			inputY = 1.0f;
+		else if (inputY <= -1.0f)
+			inputY = -1.0f;
 
 		//cannot let off gas during a speedboost//
 		if(speedboostON)

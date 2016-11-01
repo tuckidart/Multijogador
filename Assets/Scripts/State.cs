@@ -21,7 +21,6 @@ public class State : MonoBehaviour {
 	private float obstacleDistance;
 
 	private Transform obstacle;
-	private Transform nullTransform;	//Used to set transforms back to null
 
 	private ObstacleType currentObstacleType;
 	//=================SENSORS
@@ -49,28 +48,40 @@ public class State : MonoBehaviour {
 
 	public void ReceiveObstacle (Transform newObstacle, ObstacleType newObstacleType)
 	{
-		hasObstacle = true;
 		obstacle = newObstacle;
 		currentObstacleType = newObstacleType;
+		hasObstacle = true;
 		HandleObstacle ();
 	}
 
 	public void RemoveObstacle ()
 	{
 		hasObstacle = false;
-		obstacle = nullTransform;
+		obstacle = null;
 	}
 		
 	void ApplyValues ()
 	{
 		//teste do zerinhoooo!!!
-		controller.inputY += 0.01f;
-		if(controller.inputY > 1.0f)
-			controller.inputY = 1.0f;
-		controller.inputX += 0.01f;
-		if(controller.inputX > 1.0f)
-			controller.inputX = 1.0f;
+//		controller.inputY += 0.01f;
+//		if(controller.inputY > 1.0f)
+//			controller.inputY = 1.0f;
+//		controller.inputX += 0.01f;
+//		if(controller.inputX > 1.0f)
+//			controller.inputX = 1.0f;
 		//////////////////////////////
+
+		if (obstacle == null)
+		{
+			controller.inputY += 0.01f;
+		}
+		else
+		{
+			if (controller.zVel > 0)
+				controller.inputY -= 1.0f / obstacleDistance;
+			else
+				controller.inputY = 0.0f;
+		}
 	}
 
 	private void CalculateObstacleDistance ()
