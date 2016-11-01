@@ -25,7 +25,7 @@ public class ScapeController : NetworkBehaviour {
 	}
 
 	// Use this for initialization
-	void Start () 
+	void Start ()
 	{
 		if(isServer)
 			ChooseCurrentScape ();
@@ -48,6 +48,7 @@ public class ScapeController : NetworkBehaviour {
 	void ChooseCurrentScape ()
 	{
 		tempIndex = Random.Range (0, scapePositions.Count);
+		//currentScapeIndex = tempIndex;
 		RpcChangeIndex ();
 	}
 

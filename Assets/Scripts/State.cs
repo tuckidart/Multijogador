@@ -26,8 +26,11 @@ public class State : MonoBehaviour {
 	private ObstacleType currentObstacleType;
 	//=================SENSORS
 
+	private vehicleController controller;
+
 	void Awake () 
 	{
+		controller = GetComponent<vehicleController> ();
 		turnedOn = false;
 		moving = false;
 	}
@@ -60,7 +63,14 @@ public class State : MonoBehaviour {
 		
 	void ApplyValues ()
 	{
-
+		//teste do zerinhoooo!!!
+		controller.inputY += 0.01f;
+		if(controller.inputY > 1.0f)
+			controller.inputY = 1.0f;
+		controller.inputX += 0.01f;
+		if(controller.inputX > 1.0f)
+			controller.inputX = 1.0f;
+		//////////////////////////////
 	}
 
 	private void CalculateObstacleDistance ()

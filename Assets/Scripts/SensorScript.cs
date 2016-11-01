@@ -12,7 +12,7 @@ public class SensorScript : MonoBehaviour {
 
 	void Start () 
 	{
-		myCarState = transform.parent.GetComponent<State> ();
+		myCarState = transform.parent.GetComponent<State>();
 	}
 
 	void OnTriggerEnter (Collider other)

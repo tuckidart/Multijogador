@@ -108,7 +108,8 @@ public class vehicleController : NetworkBehaviour {
 	[HideInInspector]
 	[SyncVar]
 	public float inputX;
-	private float inputY;
+	[HideInInspector]
+	public float inputY;
 	private float xVel;
 	[HideInInspector]
 	[SyncVar]
@@ -675,13 +676,12 @@ public class vehicleController : NetworkBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () 
 	{
-		if(!isLocalPlayer)
+		if(isLocalPlayer)
 		{
-			return;
+			//input//
+			inputX = Mathf.SmoothStep(inputX,Input.GetAxis("Horizontal"),(steering*0.2f)*Time.deltaTime);
+			inputY = Input.GetAxis("Vertical");
 		}
-		//input//
-		inputX = Mathf.SmoothStep(inputX,Input.GetAxis("Horizontal"),(steering*0.2f)*Time.deltaTime);
-		inputY = Input.GetAxis("Vertical");
 
 		//cannot let off gas during a speedboost//
 		if(speedboostON)
@@ -775,8 +775,6 @@ public class vehicleController : NetworkBehaviour {
 		{
 			wheels.transform.rotation = transform.rotation;
 		}
-
-
 	}
 
 	public void hitSpeedBoost(GameObject fireTrailL, GameObject fireTrailR)
