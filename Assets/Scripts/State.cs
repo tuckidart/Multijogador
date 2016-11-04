@@ -18,7 +18,7 @@ public class State : MonoBehaviour {
 
 	//=================SENSORS
 	private bool hasObstacle;
-	private float obstacleDistance;
+	public float obstacleDistance;
 
 	private Transform obstacle;
 
