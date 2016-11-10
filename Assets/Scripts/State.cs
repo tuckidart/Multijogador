@@ -3,6 +3,8 @@ using System.Collections;
 
 public class State : MonoBehaviour {
 
+	public bool button;
+
 	//=================STATES
 	private bool turnedOn;				//Level 1
 	//Level 1
@@ -24,6 +26,11 @@ public class State : MonoBehaviour {
 
 	private ObstacleType currentObstacleType;
 	//=================SENSORS
+
+	private bool isTurning;
+	private float initialYrot;
+	private bool completedTurning;
+	private Transform curve;
 
 	private vehicleController controller;
 
@@ -77,10 +84,34 @@ public class State : MonoBehaviour {
 		}
 		else
 		{
-			if (controller.zVel > 0)
-				controller.inputY -= 1.0f / obstacleDistance;
-			else
-				controller.inputY = 0.0f;
+			if (currentObstacleType == ObstacleType.car || currentObstacleType == ObstacleType.light) 
+			{
+				if (controller.zVel > 0)
+					controller.inputY -= 1.0f / obstacleDistance;
+				else
+					controller.inputY = 0.0f;
+			} 
+		}
+
+		if (button && obstacleDistance < 12.0f) 
+		{
+			if (isTurning == false) 
+			{
+				initialYrot = transform.localRotation.eulerAngles.y;
+				isTurning = true;
+			}
+
+			if (transform.localRotation.eulerAngles.y > initialYrot + 87)
+			{
+				controller.inputX = 0.0f;
+				button = false;
+				isTurning = false;
+				transform.localRotation = Quaternion.Euler (transform.localRotation.eulerAngles.x, initialYrot + 90, transform.localRotation.eulerAngles.z);
+			} 
+			else 
+			{
+				controller.inputX += 0.1f;
+			}
 		}
 	}
 
@@ -93,12 +124,13 @@ public class State : MonoBehaviour {
 	{
 		if (currentObstacleType == ObstacleType.curve) 
 		{
-			if (Random.Range(0, 2) == 1)
-			{
+			//if (Random.Range(0, 2) == 1)
+			//{
 				if (obstacle.GetComponent<CurveScript>().isRight) 
 				{
 					//Set turning to +1
 					//Compute obstacle multiplier
+					button = true;
 					Debug.Log ("Curve - Turn right");
 				}
 				else 
@@ -109,7 +141,7 @@ public class State : MonoBehaviour {
 				}
 
 				obstacle.GetComponent<CurveScript> ().IncreaseNumberOfCarsThatTurned ();
-			}
+			//}
 		} 
 		else if (currentObstacleType == ObstacleType.light && obstacle.GetComponent<LightScript>().isGreen == false) 
 		{
