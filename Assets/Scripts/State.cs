@@ -90,10 +90,17 @@ public class State : MonoBehaviour {
 					controller.inputY -= 1.0f / obstacleDistance;
 				else
 					controller.inputY = 0.0f;
-			} 
+			}
+			else if(currentObstacleType == ObstacleType.curve)
+			{
+				if (controller.zVel > 0)
+					controller.inputY -= 1.0f / obstacleDistance;
+				if (controller.inputY <= 0.3f)
+					controller.inputY = 0.3f;
+			}
 		}
 
-		if (button && obstacleDistance < 12.0f) 
+		if (button && obstacleDistance < 5.0f) 
 		{
 			if (isTurning == false) 
 			{
