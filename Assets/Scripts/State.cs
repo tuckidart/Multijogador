@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class State : MonoBehaviour {
 
 	public bool button;
+	private bool isRight;
 
 	//=================STATES
 	private bool turnedOn;				//Level 1
@@ -22,7 +24,7 @@ public class State : MonoBehaviour {
 	private bool hasObstacle;
 	public float obstacleDistance;
 
-	private Transform obstacle;
+	public Transform obstacle;
 
 	private ObstacleType currentObstacleType;
 	//=================SENSORS
@@ -84,14 +86,14 @@ public class State : MonoBehaviour {
 		}
 		else
 		{
-			if (currentObstacleType == ObstacleType.car || currentObstacleType == ObstacleType.light) 
+			if (currentObstacleType == ObstacleType.car || currentObstacleType == ObstacleType.light)
 			{
 				if (controller.zVel > 0)
 					controller.inputY -= 1.0f / obstacleDistance;
 				else
 					controller.inputY = 0.0f;
-			}
-			else if(currentObstacleType == ObstacleType.curve)
+			} 
+			else if (currentObstacleType == ObstacleType.curve && button)
 			{
 				if (controller.zVel > 0)
 					controller.inputY -= 1.0f / obstacleDistance;
@@ -108,16 +110,35 @@ public class State : MonoBehaviour {
 				isTurning = true;
 			}
 
-			if (transform.localRotation.eulerAngles.y > initialYrot + 87)
+			switch(isRight)
 			{
-				controller.inputX = 0.0f;
-				button = false;
-				isTurning = false;
-				transform.localRotation = Quaternion.Euler (transform.localRotation.eulerAngles.x, initialYrot + 90, transform.localRotation.eulerAngles.z);
-			} 
-			else 
-			{
-				controller.inputX += 0.1f;
+			case true:
+				if (transform.localRotation.eulerAngles.y > initialYrot + 87)
+				{
+					controller.inputX = 0.0f;
+					button = false;
+					isTurning = false;
+					transform.localRotation = Quaternion.Euler (transform.localRotation.eulerAngles.x, initialYrot + 90, transform.localRotation.eulerAngles.z);
+				} 
+				else 
+				{
+					controller.inputX += 0.1f;
+				}
+				break;
+
+			case false:
+				if (transform.localRotation.eulerAngles.y < initialYrot - 87)
+				{
+					controller.inputX = 0.0f;
+					button = false;
+					isTurning = false;
+					transform.localRotation = Quaternion.Euler (transform.localRotation.eulerAngles.x, initialYrot - 90, transform.localRotation.eulerAngles.z);
+				}
+				else 
+				{
+					controller.inputX -= 0.1f;
+				}
+				break;
 			}
 		}
 	}
@@ -138,12 +159,15 @@ public class State : MonoBehaviour {
 					//Set turning to +1
 					//Compute obstacle multiplier
 					button = true;
+					isRight = true;
 					Debug.Log ("Curve - Turn right");
 				}
 				else 
 				{
 					//Set turning to -1
 					//Compute obstacle multiplier
+					button = true;
+					isRight = false;
 					Debug.Log ("Curve - Turn left");
 				}
 
