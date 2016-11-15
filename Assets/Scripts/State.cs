@@ -23,10 +23,11 @@ public class State : MonoBehaviour {
 	//=================SENSORS
 	private bool hasObstacle;
 	public float obstacleDistance;
+	public float curveDistance;
 
-	public Transform obstacle;
+	public Transform[] obstacles;
 
-	private ObstacleType currentObstacleType;
+	public ObstacleType[] currentObstacleType;
 	//=================SENSORS
 
 	private bool isTurning;
@@ -38,6 +39,8 @@ public class State : MonoBehaviour {
 
 	void Awake () 
 	{
+		obstacles = new Transform[2];
+		currentObstacleType = new ObstacleType[2];
 		controller = GetComponent<vehicleController> ();
 		turnedOn = false;
 		moving = false;
@@ -57,52 +60,62 @@ public class State : MonoBehaviour {
 
 	public void ReceiveObstacle (Transform newObstacle, ObstacleType newObstacleType)
 	{
-		obstacle = newObstacle;
-		currentObstacleType = newObstacleType;
-		hasObstacle = true;
-		HandleObstacle ();
+		for(int i=0;i<obstacles.Length;i++)
+		{
+			if (obstacles [i] == null)
+			{
+				obstacles[i] = newObstacle;
+				currentObstacleType[i] = newObstacleType;
+				hasObstacle = true;
+				HandleObstacle ();
+				return;
+			}
+		}
 	}
 
-	public void RemoveObstacle ()
+	public void RemoveObstacle (Transform obstacleToBeRemoved)
 	{
-		hasObstacle = false;
-		obstacle = null;
+		for(int i=0;i<obstacles.Length;i++)
+		{
+			if (obstacles [i].transform.name == obstacleToBeRemoved.name)
+			{
+				obstacles [i] = null;
+				currentObstacleType [i] = ObstacleType.NULL;
+				if (obstacles [0] == null && obstacles [1] == null)
+					hasObstacle = false;
+				return;
+			}
+		}
 	}
 		
 	void ApplyValues ()
 	{
-		//teste do zerinhoooo!!!
-//		controller.inputY += 0.01f;
-//		if(controller.inputY > 1.0f)
-//			controller.inputY = 1.0f;
-//		controller.inputX += 0.01f;
-//		if(controller.inputX > 1.0f)
-//			controller.inputX = 1.0f;
-		//////////////////////////////
-
-		if (obstacle == null)
+		if (obstacles[0] == null && obstacles[1] == null)
 		{
 			controller.inputY += 0.01f;
 		}
 		else
 		{
-			if (currentObstacleType == ObstacleType.car || currentObstacleType == ObstacleType.light)
+			for (int i = 0; i < currentObstacleType.Length; i++)
 			{
-				if (controller.zVel > 0)
-					controller.inputY -= 1.0f / obstacleDistance;
-				else
-					controller.inputY = 0.0f;
-			} 
-			else if (currentObstacleType == ObstacleType.curve && button)
-			{
-				if (controller.zVel > 0)
-					controller.inputY -= 1.0f / obstacleDistance;
-				if (controller.inputY <= 0.3f)
-					controller.inputY = 0.3f;
+				if (currentObstacleType[i] == ObstacleType.car || currentObstacleType[i] == ObstacleType.light)
+				{
+					if (controller.zVel > 0)
+						controller.inputY -= 1.0f / obstacleDistance;
+					else
+						controller.inputY = 0.0f;
+				}
+				if (currentObstacleType[i] == ObstacleType.curve && button)
+				{
+					if (controller.zVel > 0)
+						controller.inputY -= 1.0f / curveDistance;
+					if (controller.inputY <= 0.3f)
+						controller.inputY = 0.3f;
+				}
 			}
 		}
 
-		if (button && obstacleDistance < 5.0f) 
+		if (button && curveDistance < 5.0f)
 		{
 			if (isTurning == false) 
 			{
@@ -145,24 +158,36 @@ public class State : MonoBehaviour {
 
 	private void CalculateObstacleDistance ()
 	{
-		obstacleDistance = Vector3.Distance (transform.position, obstacle.position);
+		for (int i = 0; i < currentObstacleType.Length; i++)
+		{
+			if (currentObstacleType [i] != ObstacleType.curve && currentObstacleType [i] != ObstacleType.NULL)
+			{
+				obstacleDistance = Vector3.Distance (transform.position, obstacles [i].position);
+			}
+			else if (currentObstacleType [i] == ObstacleType.curve)
+			{
+				curveDistance = Vector3.Distance (transform.position, obstacles [i].position);
+			}
+		}
 	}
 
 	private void HandleObstacle ()
 	{
-		if (currentObstacleType == ObstacleType.curve) 
+		for (int i = 0; i < currentObstacleType.Length; i++)
 		{
-			//if (Random.Range(0, 2) == 1)
-			//{
-				if (obstacle.GetComponent<CurveScript>().isRight) 
+			if (currentObstacleType[i] == ObstacleType.curve)
+			{
+				//if (Random.Range(0, 2) == 1)
+				//{
+				if (obstacles[i].GetComponent<CurveScript> ().isRight)
 				{
 					//Set turning to +1
 					//Compute obstacle multiplier
 					button = true;
 					isRight = true;
 					Debug.Log ("Curve - Turn right");
-				}
-				else 
+				} 
+				else
 				{
 					//Set turning to -1
 					//Compute obstacle multiplier
@@ -171,18 +196,19 @@ public class State : MonoBehaviour {
 					Debug.Log ("Curve - Turn left");
 				}
 
-				obstacle.GetComponent<CurveScript> ().IncreaseNumberOfCarsThatTurned ();
-			//}
-		} 
-		else if (currentObstacleType == ObstacleType.light && obstacle.GetComponent<LightScript>().isGreen == false) 
-		{
-			//Fucking stop
-			Debug.Log ("Light - Fucking stop");
-		}
-		else 
-		{
-			//Fucking stop? Maybe a little slower
-			Debug.Log ("Car - Fucking stop?");
+				obstacles[i].GetComponent<CurveScript> ().IncreaseNumberOfCarsThatTurned ();
+				//}
+			}
+			else if (currentObstacleType[i] == ObstacleType.light && obstacles[i].GetComponent<LightScript> ().isGreen == false)
+			{
+				//Fucking stop
+				Debug.Log ("RED Light - Fucking stop");
+			}
+			else
+			{
+				//Fucking stop? Maybe a little slower
+				Debug.Log ("Car - Fucking stop?");
+			}
 		}
 	}
 }

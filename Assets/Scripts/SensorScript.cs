@@ -3,7 +3,7 @@ using System.Collections;
 
 public enum ObstacleType 
 {
-	car, light, curve
+	NULL, car, light, curve
 };
 	
 public class SensorScript : MonoBehaviour {
@@ -77,7 +77,7 @@ public class SensorScript : MonoBehaviour {
 		//Put any other needed tags here
 		if (other.tag == "Car" || other.tag == "Curve" || other.tag == "Light")
 		{
-			myCarState.RemoveObstacle ();
+			myCarState.RemoveObstacle (other.transform);
 		}
 	}
 }
