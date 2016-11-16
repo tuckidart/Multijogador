@@ -6,6 +6,7 @@ public class State : MonoBehaviour {
 
 	public bool button;
 	private bool isRight;
+	public float y;
 
 	//=================STATES
 	private bool turnedOn;				//Level 1
@@ -32,7 +33,12 @@ public class State : MonoBehaviour {
 
 	private bool isTurning;
 	private float initialYrot;
+	private float targetRotation;
+	private bool rotationIsOver;
+	private int rightTurns;
 	private bool completedTurning;
+	private float startTurnTime;
+	private int directionMultiplier;
 	private Transform curve;
 
 	private vehicleController controller;
@@ -44,6 +50,12 @@ public class State : MonoBehaviour {
 		controller = GetComponent<vehicleController> ();
 		turnedOn = false;
 		moving = false;
+		directionMultiplier = 1;
+	}
+
+	void Start ()
+	{
+		//transform.localRotation = Quaternion.Euler (transform.localRotation.eulerAngles.x, 0.00001f, transform.localRotation.eulerAngles.z);
 	}
 	
 	void Update () 
@@ -87,7 +99,7 @@ public class State : MonoBehaviour {
 			}
 		}
 	}
-		
+
 	void ApplyValues ()
 	{
 		if (obstacles[0] == null && obstacles[1] == null)
@@ -117,43 +129,32 @@ public class State : MonoBehaviour {
 
 		if (button && curveDistance < 5.0f)
 		{
-			if (isTurning == false) 
-			{
-				initialYrot = transform.localRotation.eulerAngles.y;
-				isTurning = true;
-			}
-
-			switch(isRight)
-			{
-			case true:
-				if (transform.localRotation.eulerAngles.y > initialYrot + 87)
-				{
-					controller.inputX = 0.0f;
-					button = false;
-					isTurning = false;
-					transform.localRotation = Quaternion.Euler (transform.localRotation.eulerAngles.x, initialYrot + 90, transform.localRotation.eulerAngles.z);
-				} 
-				else 
-				{
-					controller.inputX += 0.1f;
-				}
-				break;
-
-			case false:
-				if (transform.localRotation.eulerAngles.y < initialYrot - 87)
-				{
-					controller.inputX = 0.0f;
-					button = false;
-					isTurning = false;
-					transform.localRotation = Quaternion.Euler (transform.localRotation.eulerAngles.x, initialYrot - 90, transform.localRotation.eulerAngles.z);
-				}
-				else 
-				{
-					controller.inputX -= 0.1f;
-				}
-				break;
-			}
+			StartTurning();
+			button = false;
 		}
+	}
+
+	private float GetTargetRotation ()
+	{
+		float tg = 0;
+
+		if (directionMultiplier == 1) {
+			tg = transform.localRotation.eulerAngles.y + 90;
+
+			/*if (tg > 360) {
+				tg -= 360;
+				rotationIsOver = true;
+			}*/
+		} else {
+			tg = transform.localRotation.eulerAngles.y - 90;
+
+			/*if (tg > 360) {
+				tg -= 360;
+				rotationIsOver = true;
+			}*/
+		}
+
+		return tg;
 	}
 
 	private void CalculateObstacleDistance ()
@@ -185,6 +186,7 @@ public class State : MonoBehaviour {
 					//Compute obstacle multiplier
 					button = true;
 					isRight = true;
+					directionMultiplier = 1;
 					Debug.Log ("Curve - Turn right");
 				} 
 				else
@@ -193,6 +195,7 @@ public class State : MonoBehaviour {
 					//Compute obstacle multiplier
 					button = true;
 					isRight = false;
+					directionMultiplier = -1;
 					Debug.Log ("Curve - Turn left");
 				}
 
@@ -209,6 +212,32 @@ public class State : MonoBehaviour {
 				//Fucking stop? Maybe a little slower
 				Debug.Log ("Car - Fucking stop?");
 			}
+		}
+	}
+
+	private void StartTurning ()
+	{
+		Debug.Log ("Started Turning");
+
+		startTurnTime = Time.time;
+
+		targetRotation = GetTargetRotation ();
+
+		InvokeRepeating ("Turn", 0.0f, 0.01f);
+	}
+
+	private void Turn ()
+	{
+		controller.inputX += (0.1f * directionMultiplier);
+
+		if (Time.time > startTurnTime + 1.0f) 
+		{
+			Debug.Log ("Stopped turning");
+			controller.inputX = 0f;
+
+			transform.localRotation = Quaternion.Euler (transform.localRotation.eulerAngles.x, targetRotation, transform.localRotation.eulerAngles.z);
+
+			CancelInvoke ();
 		}
 	}
 }
