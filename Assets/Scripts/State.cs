@@ -151,43 +151,18 @@ public class State : MonoBehaviour {
 				{
 					if (controller.zVel > 0)
 						controller.inputY -= 1.0f / curveDistance;
-					if (controller.inputY <= 0.3f)
-						controller.inputY = 0.3f;
+					if (controller.inputY <= 0.5f)
+						controller.inputY = 0.5f;
 				}
 			}
 		}
 
 		if (button && curveDistance < 5.0f)
 		{
-			//StartTurning();
-
 			button = false;
 		}
 	}
-
-	private float GetTargetRotation ()
-	{
-		float tg = 0;
-
-		if (directionMultiplier == 1) {
-			tg = transform.localRotation.eulerAngles.y + 90;
-
-			/*if (tg > 360) {
-				tg -= 360;
-				rotationIsOver = true;
-			}*/
-		} else {
-			tg = transform.localRotation.eulerAngles.y - 90;
-
-			/*if (tg > 360) {
-				tg -= 360;
-				rotationIsOver = true;
-			}*/
-		}
-
-		return tg;
-	}
-
+		
 	private void CalculateObstacleDistance ()
 	{
 		for (int i = 0; i < currentObstacleType.Length; i++)
@@ -243,32 +218,6 @@ public class State : MonoBehaviour {
 				//Fucking stop? Maybe a little slower
 				Debug.Log ("Car - Fucking stop?");
 			}
-		}
-	}
-
-	private void StartTurning ()
-	{
-		Debug.Log ("Started Turning");
-
-		startTurnTime = Time.time;
-
-		targetRotation = GetTargetRotation ();
-
-		InvokeRepeating ("Turn", 0.0f, 0.01f);
-	}
-
-	private void Turn ()
-	{
-		controller.inputX += (0.1f * directionMultiplier);
-
-		if (Time.time > startTurnTime + 1.0f) 
-		{
-			Debug.Log ("Stopped turning");
-			controller.inputX = 0f;
-
-			transform.localRotation = Quaternion.Euler (transform.localRotation.eulerAngles.x, targetRotation, transform.localRotation.eulerAngles.z);
-
-			CancelInvoke ();
 		}
 	}
 }
