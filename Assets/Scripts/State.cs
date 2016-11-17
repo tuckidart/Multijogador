@@ -41,6 +41,9 @@ public class State : MonoBehaviour {
 	private int directionMultiplier;
 	private Transform curve;
 
+	public Transform way1;
+	private Transform currentWaypoint;
+
 	private vehicleController controller;
 
 	void Awake () 
@@ -56,6 +59,7 @@ public class State : MonoBehaviour {
 	void Start ()
 	{
 		//transform.localRotation = Quaternion.Euler (transform.localRotation.eulerAngles.x, 0.00001f, transform.localRotation.eulerAngles.z);
+		currentWaypoint = way1;
 	}
 	
 	void Update () 
@@ -65,6 +69,32 @@ public class State : MonoBehaviour {
 
 		//Apply values to the car
 		ApplyValues ();
+	}
+
+	void FixedUpdate ()
+	{
+		Vector3 RelativeWaypointPosition = transform.InverseTransformPoint( 
+			currentWaypoint.position.x, 
+			transform.position.y, 
+			currentWaypoint.position.z );
+
+		//Debug.Log (RelativeWaypointPosition.x);
+
+
+		// by dividing the horizontal position by the magnitude, we get a decimal percentage of the turn angle that we can use to drive the wheels
+		float inputSteer = RelativeWaypointPosition.x / RelativeWaypointPosition.magnitude;
+
+		controller.inputX = inputSteer;
+
+		if ( RelativeWaypointPosition.magnitude < 10 ) {
+			currentWaypoint = currentWaypoint.GetComponent<Waypoint>().GetRandomWaypoint();
+
+			//if ( currentWaypoint >= waypoints.length ) {
+				//currentWaypoint = 0;
+			//}
+		}
+
+		Debug.Log (inputSteer);
 	}
 
 	//public void ReceiveCar ()
@@ -129,7 +159,8 @@ public class State : MonoBehaviour {
 
 		if (button && curveDistance < 5.0f)
 		{
-			StartTurning();
+			//StartTurning();
+
 			button = false;
 		}
 	}
