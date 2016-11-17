@@ -51,6 +51,7 @@ public class Impact_Effects : NetworkBehaviour {
 				minimap.GetComponent<bl_MiniMap> ().DoHitEffect ();
 				cam.GetComponent<cameraShake> ().Shake ();
 			}
+			GetComponent<AudioSource> ().Play();
 		}
 	}
 

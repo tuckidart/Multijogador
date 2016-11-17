@@ -4,9 +4,7 @@ using System.Collections.Generic;
 
 public class State : MonoBehaviour {
 
-	public bool button;
 	private bool isRight;
-	public float y;
 
 	//=================STATES
 	private bool turnedOn;				//Level 1
@@ -14,8 +12,8 @@ public class State : MonoBehaviour {
 	private bool moving;				//Level 2
 
 	//Level 2
-	private float acceleration;			// 1 | -1
-	private float turning;				// 1 | -1
+	private float acceleration;			// -1 | 1
+	private float turning;				// -1 | 1
 
 	private bool parked;				//Used on initialize
 	//=================STATES
@@ -31,13 +29,6 @@ public class State : MonoBehaviour {
 	public ObstacleType[] currentObstacleType;
 	//=================SENSORS
 
-	private bool isTurning;
-	private float initialYrot;
-	private float targetRotation;
-	private bool rotationIsOver;
-	private int rightTurns;
-	private bool completedTurning;
-	private float startTurnTime;
 	private int directionMultiplier;
 	private Transform curve;
 
@@ -58,7 +49,6 @@ public class State : MonoBehaviour {
 
 	void Start ()
 	{
-		//transform.localRotation = Quaternion.Euler (transform.localRotation.eulerAngles.x, 0.00001f, transform.localRotation.eulerAngles.z);
 		currentWaypoint = way1;
 	}
 	
@@ -66,7 +56,7 @@ public class State : MonoBehaviour {
 	{
 		for(int i=0;i<currentObstacleType.Length;i++)
 		{
-			if (currentObstacleType [i] == ObstacleType.car)
+			if (currentObstacleType [i] == ObstacleType.car || (currentObstacleType [i] == ObstacleType.light && !obstacles[i].GetComponent<LightScript>().isGreen))
 			{
 				hasObstacle = true;
 				break;
@@ -92,39 +82,43 @@ public class State : MonoBehaviour {
 		//by dividing the horizontal position by the magnitude, we get a decimal percentage of the turn angle that we can use to drive the wheels
 		controller.inputX = RelativeWaypointPosition.x / RelativeWaypointPosition.magnitude;
 
-		controller.steering = 100 / controller.zVel + 50;
-
-		if(controller.steering > 100)
-		{
-			controller.steering = 100;
-		}
+		controller.steering = (100 / controller.zVel) + 40;
+		if (controller.steering > 120)
+			controller.steering = 120;
 
 		if (RelativeWaypointPosition.magnitude < controller.zVel)
 		{
 			currentWaypoint = currentWaypoint.GetComponent<Waypoint>().GetRandomWaypoint();
-
-			//if ( currentWaypoint >= waypoints.length ) {
-			//currentWaypoint = 0;
-			//}
 		}
 
 		if(!hasObstacle)
 		{
 			//controller.inputY += 0.01f;
 			if (Mathf.Abs (controller.inputX) < 0.5f && Mathf.Abs (controller.inputX) > -0.5f)
-			controller.inputY = RelativeWaypointPosition.z / RelativeWaypointPosition.magnitude - Mathf.Abs (controller.inputX);
+				controller.inputY = RelativeWaypointPosition.z / RelativeWaypointPosition.magnitude - Mathf.Abs (controller.inputX);
+			else
+			{
+				controller.inputY -= 0.01f;
+				if (controller.inputY <= 0.5f)
+					controller.inputY = 0.5f;
+			}
 		}
 		else if (hasObstacle)
 		{
-			for (int i = 0; i < currentObstacleType.Length; i++)
-			{
-				if (currentObstacleType [i] == ObstacleType.car || currentObstacleType [i] == ObstacleType.light)
-				{
-					if (controller.zVel > 0)
-						controller.inputY -= 1.0f / obstacleDistance;
-					else
-						controller.inputY = 0.0f;
-				}
+			if (controller.zVel > 0)
+				controller.inputY -= 1.0f / obstacleDistance;
+			else
+				controller.inputY = 0.0f;
+			
+//			for (int i = 0; i < currentObstacleType.Length; i++)
+//			{
+//				if (currentObstacleType [i] == ObstacleType.car || (currentObstacleType [i] == ObstacleType.light && !obstacles[i].GetComponent<LightScript>().isGreen))
+//				{
+//					if (controller.zVel > 0)
+//						controller.inputY -= 1.0f / obstacleDistance;
+//					else
+//						controller.inputY = 0.0f;
+//				}
 //				if (currentObstacleType [i] == ObstacleType.curve)
 //				{
 //					if (controller.zVel > 0)
@@ -132,7 +126,7 @@ public class State : MonoBehaviour {
 //					if (controller.inputY <= 0.5f)
 //						controller.inputY = 0.5f;
 //				}
-			}
+//			}
 		}
 	}
 		
@@ -174,15 +168,16 @@ public class State : MonoBehaviour {
 //
 //				//obstacles[i].GetComponent<CurveScript> ().IncreaseNumberOfCarsThatTurned ();
 //		}
-		if (newObstacleType == ObstacleType.light && newObstacle.GetComponent<LightScript> ().isGreen == false)
+		if (newObstacleType == ObstacleType.light && !newObstacle.GetComponent<LightScript> ().isGreen)
 		{
 			//Fucking stop
-			Debug.Log ("RED Light - Fucking stop");
+			Debug.Log ("RED Light - Fucking Stop!");
+			hasObstacle = true;
 		}
 		else if(newObstacleType == ObstacleType.car)
 		{
 			//Fucking stop? Maybe a little slower
-			Debug.Log ("Car - Fucking stop?");
+			Debug.Log ("Car - Slow Down!");
 			hasObstacle = true;
 		}
 	}
