@@ -111,7 +111,7 @@ public class vehicleController : NetworkBehaviour {
 	//[HideInInspector]
 	public float inputY;
 	private float xVel;
-	[HideInInspector]
+	//[HideInInspector]
 	[SyncVar]
 	public float zVel;
 
