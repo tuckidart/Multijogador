@@ -25,7 +25,7 @@ public class PlayerSetup : NetworkBehaviour {
 
 	void Start()
 	{
-		if (!base.isLocalPlayer)
+		if (!base.isLocalPlayer && componentsToDisable.Length > 0)
 		{
 			for (int i = 0; i < componentsToDisable.Length; i++)
 			{

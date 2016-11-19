@@ -443,6 +443,8 @@ public class vehicleController : NetworkBehaviour {
 	
 	void Update()
 	{
+		if (!isServer && !isLocalPlayer)
+			enabled = false;
 		//track how many tires are touching the ground//
 		tiresOnGround = 0;
 		FtiresOnGround = 0;
@@ -676,7 +678,7 @@ public class vehicleController : NetworkBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () 
 	{
-		if(isLocalPlayer)
+		if(base.isLocalPlayer)
 		{
 			//input//
 			inputX = Mathf.SmoothStep(inputX,Input.GetAxis("Horizontal"),(steering*0.2f)*Time.deltaTime);

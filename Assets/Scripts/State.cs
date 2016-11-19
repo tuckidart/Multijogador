@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 
-public class State : MonoBehaviour {
+public class State : NetworkBehaviour {
 
 	private bool isRight;
 
@@ -33,11 +34,24 @@ public class State : MonoBehaviour {
 	private Transform curve;
 
 	public Transform way1;
-	private Transform currentWaypoint;
+	public Transform currentWaypoint;
 
 	private vehicleController controller;
 
-	void Awake () 
+//	void Awake () 
+//	{
+//		if (!isServer && isClient)
+//			base.enabled = false;
+//		
+//		obstacles = new Transform[2];
+//		currentObstacleType = new ObstacleType[2];
+//		controller = GetComponent<vehicleController> ();
+//		turnedOn = false;
+//		moving = false;
+//		directionMultiplier = 1;
+//	}
+
+	void Start ()
 	{
 		obstacles = new Transform[2];
 		currentObstacleType = new ObstacleType[2];
@@ -45,15 +59,15 @@ public class State : MonoBehaviour {
 		turnedOn = false;
 		moving = false;
 		directionMultiplier = 1;
-	}
 
-	void Start ()
-	{
 		currentWaypoint = way1;
 	}
 	
-	void Update () 
+	void Update ()
 	{
+		if (!isServer)
+			enabled = false;
+		
 		for(int i=0;i<currentObstacleType.Length;i++)
 		{
 			if (currentObstacleType [i] == ObstacleType.car || (currentObstacleType [i] == ObstacleType.light && !obstacles[i].GetComponent<LightScript>().isGreen))

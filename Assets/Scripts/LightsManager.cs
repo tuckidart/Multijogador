@@ -23,11 +23,9 @@ public class LightsManager : MonoBehaviour {
 			lights.Add (transform.GetChild(i).gameObject.GetComponent<LightScript> ());
 		}
 
-		if (lights.Count > 0) 
-		{
-			currentActiveLightIndex = 0;
-			lights [0].ToggleLight ();
-		}
+		//int aux = Random.Range (0, lights.Count);
+		currentActiveLightIndex = 0;
+		lights [0].ToggleLight ();
 
 		InvokeRepeating("GoToNextLight", timeBetweenLightTransitions, timeBetweenLightTransitions);
 	}

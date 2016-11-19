@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
 public enum ObstacleType 
 {
 	NULL, car, light, curve
 };
 	
-public class SensorScript : MonoBehaviour {
+public class SensorScript : NetworkBehaviour {
 
 	private State myCarState;
 	public Transform min;
@@ -22,6 +23,9 @@ public class SensorScript : MonoBehaviour {
 	private float initialZScale;
 	private float initialZPosition;
 
+	Vector3 newScale;
+	Vector3 newPosition;
+
 	void Start () 
 	{
 		controller = transform.parent.GetComponent<vehicleController>();
@@ -36,6 +40,8 @@ public class SensorScript : MonoBehaviour {
 
 	void Update()
 	{
+		if (!isServer)
+			enabled = false;
 		//adjust sensorSize and position accordingly to car's velocity
 		carVel = controller.zVel;
 		InterpolateTransform ();
@@ -46,11 +52,11 @@ public class SensorScript : MonoBehaviour {
 		float x = carVel / maxVel;
 
 		float newZScale = initialZScale + (scaleAux*x);
-		Vector3 newScale = new Vector3 (transform.localScale.x, transform.localScale.y, newZScale);
+		newScale = new Vector3 (transform.localScale.x, transform.localScale.y, newZScale);
 		transform.localScale = newScale;
 
 		float newZPos = initialZPosition + (positionAux*x);
-		Vector3 newPosition = new Vector3 (transform.localPosition.x, transform.localPosition.y, newZPos);
+		newPosition = new Vector3 (transform.localPosition.x, transform.localPosition.y, newZPos);
 		transform.localPosition = newPosition;
 	}
 
