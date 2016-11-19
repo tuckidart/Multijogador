@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 public class State : NetworkBehaviour {
 
-	private bool isRight;
+	public Transform cantGoToThisWaypoint;
 
 	//=================STATES
 	private bool turnedOn;				//Level 1
@@ -21,20 +21,20 @@ public class State : NetworkBehaviour {
 
 
 	//=================SENSORS
-	public bool hasObstacle;
-	public float obstacleDistance;
-	public float curveDistance;
+	private bool hasObstacle;
+	private float obstacleDistance;
+	private float curveDistance;
 
-	public Transform[] obstacles;
+	private Transform[] obstacles;
 
-	public ObstacleType[] currentObstacleType;
+	private ObstacleType[] currentObstacleType;
 	//=================SENSORS
 
 	private int directionMultiplier;
 	private Transform curve;
 
 	public Transform way1;
-	public Transform currentWaypoint;
+	private Transform currentWaypoint;
 
 	private vehicleController controller;
 
@@ -102,7 +102,7 @@ public class State : NetworkBehaviour {
 
 		if (RelativeWaypointPosition.magnitude < controller.zVel)
 		{
-			currentWaypoint = currentWaypoint.GetComponent<Waypoint>().GetRandomWaypoint();
+			currentWaypoint = currentWaypoint.GetComponent<Waypoint>().GetRandomWaypoint(transform, cantGoToThisWaypoint);
 		}
 
 		if(!hasObstacle)
