@@ -16,11 +16,8 @@ public class Waypoint : MonoBehaviour {
 		do 
 		{
 			index = Random.Range (0, waypoints.Count);
-			Debug.Log (index);
 		}
 		while(waypoints [index] == cantGoToThisWaypoint);
-
-		Debug.Log ("VOU PARA O WAYPOINT: " + waypoints [index].name);
 
 		if(index != 0 || waypoints.Count == 1)
 			WrongWay ();

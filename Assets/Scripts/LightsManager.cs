@@ -13,7 +13,7 @@ public class LightsManager : MonoBehaviour {
 
 	void Awake ()
 	{
-		lights = new List<LightScript> (); 
+		lights = new List<LightScript> ();
 	}
 
 	void Start () 

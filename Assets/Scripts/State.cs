@@ -6,6 +6,8 @@ using UnityEngine.Networking;
 public class State : NetworkBehaviour {
 
 	public Transform cantGoToThisWaypoint;
+	public Transform currentTrafficLights;
+	private bool lightAux;
 
 	//=================STATES
 	private bool turnedOn;				//Level 1
@@ -72,8 +74,16 @@ public class State : NetworkBehaviour {
 		{
 			if (currentObstacleType [i] == ObstacleType.car || (currentObstacleType [i] == ObstacleType.light && !obstacles[i].GetComponent<LightScript>().isGreen))
 			{
-				hasObstacle = true;
-				break;
+				if(!lightAux)
+				{
+					hasObstacle = true;
+					break;
+				}
+				else
+				{
+					hasObstacle = false;
+					break;
+				}
 			}
 			else
 				hasObstacle = false;
@@ -123,24 +133,6 @@ public class State : NetworkBehaviour {
 				controller.inputY -= 1.0f / obstacleDistance;
 			else
 				controller.inputY = 0.0f;
-			
-//			for (int i = 0; i < currentObstacleType.Length; i++)
-//			{
-//				if (currentObstacleType [i] == ObstacleType.car || (currentObstacleType [i] == ObstacleType.light && !obstacles[i].GetComponent<LightScript>().isGreen))
-//				{
-//					if (controller.zVel > 0)
-//						controller.inputY -= 1.0f / obstacleDistance;
-//					else
-//						controller.inputY = 0.0f;
-//				}
-//				if (currentObstacleType [i] == ObstacleType.curve)
-//				{
-//					if (controller.zVel > 0)
-//						controller.inputY -= 1.0f / curveDistance;
-//					if (controller.inputY <= 0.5f)
-//						controller.inputY = 0.5f;
-//				}
-//			}
 		}
 	}
 		
@@ -161,37 +153,26 @@ public class State : NetworkBehaviour {
 
 	private void HandleObstacle (Transform newObstacle, ObstacleType newObstacleType)
 	{
-//		if (newObstacleType == ObstacleType.curve)
-//		{
-//			if (newObstacle.GetComponent<Waypoint> ().isRight)
-//			{
-//				//Set turning to +1
-//				//Compute obstacle multiplier
-//				isRight = true;
-//				directionMultiplier = 1;
-//				Debug.Log ("Curve - Turn right");
-//			} 
-//			else
-//			{
-//				//Set turning to -1
-//				//Compute obstacle multiplier
-//				isRight = false;
-//				directionMultiplier = -1;
-//				Debug.Log ("Curve - Turn left");
-//			}
-//
-//				//obstacles[i].GetComponent<CurveScript> ().IncreaseNumberOfCarsThatTurned ();
-//		}
-		if (newObstacleType == ObstacleType.light && !newObstacle.GetComponent<LightScript> ().isGreen)
+		if (newObstacleType == ObstacleType.light)
 		{
-			//Fucking stop
-			Debug.Log ("RED Light - Fucking Stop!");
-			hasObstacle = true;
+			if (!newObstacle.GetComponent<LightScript>().isGreen)
+			{
+				if (newObstacle.parent != currentTrafficLights)
+				{
+					//Fucking stop
+					//Debug.Log ("RED Light - Fucking Stop!");
+					hasObstacle = true;
+					lightAux = false;
+					currentTrafficLights = newObstacle.parent;
+				}
+				else
+					lightAux = true;
+			}
 		}
 		else if(newObstacleType == ObstacleType.car)
 		{
 			//Fucking stop? Maybe a little slower
-			Debug.Log ("Car - Slow Down!");
+			//Debug.Log ("Car - Slow Down!");
 			hasObstacle = true;
 		}
 	}
@@ -212,18 +193,6 @@ public class State : NetworkBehaviour {
 
 	public void RemoveObstacle (Transform obstacleToBeRemoved)
 	{
-//		for(int i=0;i<obstacles.Length;i++)
-//		{
-//			if (obstacles [i].transform.name == obstacleToBeRemoved.name)
-//			{
-//				obstacles [i] = null;
-//				currentObstacleType [i] = ObstacleType.NULL;
-//				if (obstacles [0] == null && obstacles [1] == null)
-//					hasObstacle = false;
-//				break;
-//			}
-//		}
-
 		if(obstacles[0] != null)
 		{
 			if (obstacles [0].transform.name == obstacleToBeRemoved.name)
