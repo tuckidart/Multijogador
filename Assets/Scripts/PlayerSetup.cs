@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Runtime.InteropServices;
+using UnityEngine;
 using UnityEngine.Networking;
 
 public class PlayerSetup : NetworkBehaviour {
@@ -8,6 +9,7 @@ public class PlayerSetup : NetworkBehaviour {
 
 	public GameObject suspectPointPrefab;
 	public GameObject policePointPrefab;
+	public GameObject scapePrefab;
 	private GameObject minimap;
 
 	[SerializeField]
@@ -45,6 +47,7 @@ public class PlayerSetup : NetworkBehaviour {
 			else if(gameObject.tag == "Suspect")
 			{
 				minimap.GetComponent<bl_MiniMap> ().LevelName = "Objective - Blend in and escape!";
+//				GameObject.FindGameObjectWithTag ("ScapeController").transform.GetComponent<ScapeController> ().aux = true;
 			}
 		}
 
@@ -69,5 +72,16 @@ public class PlayerSetup : NetworkBehaviour {
 	void DestroyPoint()
 	{
 		newItem.GetComponent<bl_MiniMapItem>().RpcDestroyItem(true);
+	}
+
+	public void CreateScapePoint(bl_MMItemInfo item)
+	{
+		if(gameObject.tag == "Cop")
+			newItem = Instantiate (scapePrefab, item.Position, Quaternion.identity) as GameObject;
+		else
+			newItem = Instantiate (scapePrefab, item.Position, Quaternion.identity) as GameObject;
+
+		NetworkServer.Spawn (newItem);
+		//Invoke ("DestroyPoint", 5f);
 	}
 }

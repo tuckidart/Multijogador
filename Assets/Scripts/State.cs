@@ -5,8 +5,9 @@ using UnityEngine.Networking;
 
 public class State : NetworkBehaviour {
 
-	public Transform cantGoToThisWaypoint;
-	public Transform currentTrafficLights;
+	private Transform currentWaypoint;
+	private Transform cantGoToThisWaypoint;
+	private Transform currentTrafficLights;
 	private bool lightAux;
 
 	//=================STATES
@@ -34,8 +35,6 @@ public class State : NetworkBehaviour {
 
 	private int directionMultiplier;
 	private Transform curve;
-
-	public Transform currentWaypoint;
 
 	private vehicleController controller;
 
@@ -105,7 +104,7 @@ public class State : NetworkBehaviour {
 		//by dividing the horizontal position by the magnitude, we get a decimal percentage of the turn angle that we can use to drive the wheels
 		controller.inputX = RelativeWaypointPosition.x / RelativeWaypointPosition.magnitude;
 
-		controller.steering = ((100 / controller.zVel)+37);
+		controller.steering = ((100 / controller.zVel)*3.3f);
 		if (controller.steering > 120)
 			controller.steering = 120;
 
@@ -122,8 +121,8 @@ public class State : NetworkBehaviour {
 			else
 			{
 				controller.inputY -= 0.01f;
-				if (controller.inputY <= 0.35f)
-					controller.inputY = 0.35f;
+				if (controller.inputY <= 0.5f)
+					controller.inputY = 0.5f;
 			}
 		}
 		else if (hasObstacle)
@@ -208,6 +207,11 @@ public class State : NetworkBehaviour {
 				currentObstacleType [1] = ObstacleType.NULL;
 			}
 		}
+	}
+
+	public void SetCantGoToThisWaypoint(Transform newC)
+	{
+		cantGoToThisWaypoint = newC;
 	}
 
 	private void FireRaycast ()

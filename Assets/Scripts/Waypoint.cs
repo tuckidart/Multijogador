@@ -28,6 +28,6 @@ public class Waypoint : MonoBehaviour {
 
 	void WrongWay()
 	{
-		AiCar.GetComponent<State>().cantGoToThisWaypoint = wrongWay;
+		AiCar.GetComponent<State>().SetCantGoToThisWaypoint(wrongWay);
 	}
 }
