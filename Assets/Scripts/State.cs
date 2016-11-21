@@ -35,16 +35,12 @@ public class State : NetworkBehaviour {
 	private int directionMultiplier;
 	private Transform curve;
 
-	public Transform way1;
-	private Transform currentWaypoint;
+	public Transform currentWaypoint;
 
 	private vehicleController controller;
 
 //	void Awake () 
 //	{
-//		if (!isServer && isClient)
-//			base.enabled = false;
-//		
 //		obstacles = new Transform[2];
 //		currentObstacleType = new ObstacleType[2];
 //		controller = GetComponent<vehicleController> ();
@@ -61,8 +57,6 @@ public class State : NetworkBehaviour {
 		turnedOn = false;
 		moving = false;
 		directionMultiplier = 1;
-
-		currentWaypoint = way1;
 
 		Invoke("FireRaycast", 0.1f);
 	}
@@ -103,12 +97,15 @@ public class State : NetworkBehaviour {
 
 	void ApplyValues ()
 	{
+		if (currentWaypoint == null)
+			return;
+			
 		Vector3 RelativeWaypointPosition = transform.InverseTransformPoint(currentWaypoint.position.x, transform.position.y, currentWaypoint.position.z);
 
 		//by dividing the horizontal position by the magnitude, we get a decimal percentage of the turn angle that we can use to drive the wheels
 		controller.inputX = RelativeWaypointPosition.x / RelativeWaypointPosition.magnitude;
 
-		controller.steering = (100 / controller.zVel) + 40;
+		controller.steering = ((100 / controller.zVel)+37);
 		if (controller.steering > 120)
 			controller.steering = 120;
 
@@ -125,8 +122,8 @@ public class State : NetworkBehaviour {
 			else
 			{
 				controller.inputY -= 0.01f;
-				if (controller.inputY <= 0.5f)
-					controller.inputY = 0.5f;
+				if (controller.inputY <= 0.35f)
+					controller.inputY = 0.35f;
 			}
 		}
 		else if (hasObstacle)
@@ -224,14 +221,13 @@ public class State : NetworkBehaviour {
 
 			if (hits[i].transform.tag == "Curve") 
 			{
-				way1 = hits[i].transform;
+				currentWaypoint = hits[i].transform;
 
-				if (hits [i].transform.gameObject.GetComponent<Waypoint> ().brother != null) 
+				if (currentWaypoint.GetComponent<Waypoint>().brother != null)
 				{
-					//Debug.Log ("Found a brother");
-					cantGoToThisWaypoint = hits [i].transform.gameObject.GetComponent<Waypoint> ().brother;
+					cantGoToThisWaypoint = currentWaypoint.GetComponent<Waypoint>().brother;
 				}
-					
+
 				return;
 			}
 		}

@@ -26,12 +26,12 @@ public class Paint_Car : NetworkBehaviour {
 			textures.Add (i, textureList [i]);
 		}
 
-		if(isClient && isLocalPlayer)
-		{				
-			if (gameObject.tag == "Suspect")
+		if (gameObject.tag == "Suspect" || gameObject.tag == "AI Car")
+		{
+			if(isServer)
 			{
 				int randTex = Random.Range (0, textureList.Count);
-				CmdPaint (randTex);
+				RpcPaint (randTex);
 			}
 		}
 	}
@@ -56,7 +56,7 @@ public class Paint_Car : NetworkBehaviour {
 				CmdPaint (randTex);
 				damageEffects.ResetDamage();
 				canPaint = false;
-				autoRepairAudioSource.Play ();
+				autoRepairAudioSource.Play();
 			}	
 		}
 	}
@@ -73,6 +73,12 @@ public class Paint_Car : NetworkBehaviour {
 
 	[Command]
 	void CmdPaint(int newTexture)
+	{
+		currentTexture = newTexture;
+	}
+
+	[ClientRpc]
+	void RpcPaint(int newTexture)
 	{
 		currentTexture = newTexture;
 	}
