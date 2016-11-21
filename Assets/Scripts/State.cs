@@ -63,6 +63,8 @@ public class State : NetworkBehaviour {
 		directionMultiplier = 1;
 
 		currentWaypoint = way1;
+
+		Invoke("FireRaycast", 0.1f);
 	}
 	
 	void Update ()
@@ -207,6 +209,30 @@ public class State : NetworkBehaviour {
 			{
 				obstacles [1] = null;
 				currentObstacleType [1] = ObstacleType.NULL;
+			}
+		}
+	}
+
+	private void FireRaycast ()
+	{
+		RaycastHit[] hits;
+		hits = Physics.RaycastAll(transform.position, transform.forward, 100.0F);
+
+		for (int i = 0; i < hits.Length; i++) {
+
+			RaycastHit hit = hits[i];
+
+			if (hits[i].transform.tag == "Curve") 
+			{
+				way1 = hits[i].transform;
+
+				if (hits [i].transform.gameObject.GetComponent<Waypoint> ().brother != null) 
+				{
+					//Debug.Log ("Found a brother");
+					cantGoToThisWaypoint = hits [i].transform.gameObject.GetComponent<Waypoint> ().brother;
+				}
+					
+				return;
 			}
 		}
 	}

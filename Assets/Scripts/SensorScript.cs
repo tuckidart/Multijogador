@@ -33,7 +33,8 @@ public class SensorScript : NetworkBehaviour {
 
 		maxVel = 20.0f;
 		scaleAux = max.localScale.z - min.localScale.z;
-		positionAux = max.position.z - min.position.z;
+		//positionAux = max.position.z - min.position.z;
+		positionAux = max.localPosition.z - min.localPosition.z;
 		initialZScale = transform.localScale.z;
 		initialZPosition = transform.localPosition.z;
 	}
@@ -85,5 +86,10 @@ public class SensorScript : NetworkBehaviour {
 		{
 			myCarState.RemoveObstacle (other.transform);
 		}
+	}
+
+	void FireRayCast ()
+	{
+
 	}
 }

@@ -6,6 +6,7 @@ public class Waypoint : MonoBehaviour {
 
 	public List<Transform> waypoints;
 	public Transform wrongWay;
+	public Transform brother;
 
 	private Transform AiCar;
 
