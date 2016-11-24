@@ -63,7 +63,7 @@ public class State : NetworkBehaviour {
 	void Update ()
 	{
 		if (!isServer)
-			enabled = false;
+			return;
 		
 		for(int i=0;i<currentObstacleType.Length;i++)
 		{

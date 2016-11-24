@@ -444,7 +444,7 @@ public class vehicleController : NetworkBehaviour {
 	void Update()
 	{
 		if (!isServer)
-			enabled = false;
+			return;
 		//track how many tires are touching the ground//
 		tiresOnGround = 0;
 		FtiresOnGround = 0;

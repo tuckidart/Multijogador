@@ -42,7 +42,7 @@ public class SensorScript : NetworkBehaviour {
 	void Update()
 	{
 		if (!isServer)
-			enabled = false;
+			return;
 		//adjust sensorSize and position accordingly to car's velocity
 		carVel = controller.zVel;
 		InterpolateTransform ();
