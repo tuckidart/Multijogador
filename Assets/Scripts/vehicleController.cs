@@ -443,8 +443,8 @@ public class vehicleController : NetworkBehaviour {
 	
 	void Update()
 	{
-		if (!isServer)
-			return;
+		if (!isServer && !isLocalPlayer)
+			enabled = false;
 		//track how many tires are touching the ground//
 		tiresOnGround = 0;
 		FtiresOnGround = 0;
