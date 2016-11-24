@@ -28,10 +28,10 @@ public class Paint_Car : NetworkBehaviour {
 
 		if (gameObject.tag == "Suspect" || gameObject.tag == "AI Car")
 		{
-			if(isServer)
+			if(!isServer)
 			{
 				int randTex = Random.Range (0, textureList.Count);
-				RpcPaint (randTex);
+				CmdPaint (randTex);
 			}
 		}
 	}
