@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
-public class Radar : MonoBehaviour {
+public class Radar : NetworkBehaviour {
 
 	public float radius;
 	private GameObject objFound;
@@ -10,6 +11,8 @@ public class Radar : MonoBehaviour {
 	public Shader notHighlighted;
 	public float distanceToLoseSuspect;
 
+	public SirenEffect sirenEffectScript;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -17,14 +20,16 @@ public class Radar : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-		if (Input.GetButtonDown ("Jump"))
-			RadarScan ();
+
+		if(isLocalPlayer)
+			if (Input.GetButtonDown ("Jump"))
+				RadarScan ();
 
 		if(objFound != null)
 			if(Vector3.Distance(transform.position, objFound.transform.position) > distanceToLoseSuspect)
 			{
 				highlightedObj.GetComponent<Renderer>().material.shader = notHighlighted;
+				sirenEffectScript.CmdToggleSiren(false);
 			}
 	}
 
@@ -42,6 +47,7 @@ public class Radar : MonoBehaviour {
 					highlightedObj = objFound.transform.Find("body").gameObject;
 					highlightedObj.GetComponent<Renderer>().material.shader = highlighted;
 
+					sirenEffectScript.CmdToggleSiren(true);
 					Debug.Log ("VAGABUNDO ENCONTRADO!");
 				}
 			}
