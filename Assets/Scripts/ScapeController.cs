@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using UnityEngine.Networking;
 
 public class ScapeController : NetworkBehaviour {
-	
-	public GameObject scapePrefab;
+
+	public GameObject scapePointPrefab;
+
 	public int timeToScape;
 	public List<Transform> scapePositions;
 
@@ -59,10 +60,9 @@ public class ScapeController : NetworkBehaviour {
 	[Command]
 	void CmdIntantiatePrefab()
 	{
-		GameObject temp = Instantiate (scapePrefab, scapePositions[currentScapeIndex].position, Quaternion.identity) as GameObject;
+		GameObject temp = Instantiate (scapePointPrefab, scapePositions[currentScapeIndex].position, scapePositions[currentScapeIndex].rotation) as GameObject;
 		
 		NetworkServer.Spawn (temp);
-//		bl_MMItemInfo scapePosition = new bl_MMItemInfo(temp.transform.position);
 	}
 
 	[ClientRpc]
