@@ -11,11 +11,11 @@ public class Radar : NetworkBehaviour {
 	public Shader notHighlighted;
 	public float distanceToLoseSuspect;
 
-	public SirenEffect sirenEffectScript;
+	private SirenEffect sirenEffectScript;
 
 	// Use this for initialization
 	void Start () {
-		
+		sirenEffectScript = GetComponent<SirenEffect> ();
 	}
 	
 	// Update is called once per frame
