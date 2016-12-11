@@ -14,13 +14,14 @@ public class Radar : NetworkBehaviour {
 	private SirenEffect sirenEffectScript;
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 		sirenEffectScript = GetComponent<SirenEffect> ();
 	}
 	
 	// Update is called once per frame
-	void Update () {
-
+	void Update ()
+	{
 		if(isLocalPlayer)
 			if (Input.GetButtonDown ("Jump"))
 				RadarScan ();
