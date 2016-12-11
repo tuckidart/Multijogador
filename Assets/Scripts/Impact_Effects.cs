@@ -79,9 +79,11 @@ public class Impact_Effects : NetworkBehaviour {
 		//Destroy (gameObject);
 	}
 
-	void CheckCarHealth(float health)
+	void CheckCarHealth(float newHealth)
 	{
-		if (health < 70 && !createdSmokeLow)
+		carhealth = newHealth;
+
+		if (carhealth < 70 && !createdSmokeLow)
 		{
 			if (isLocalPlayer)
 				CmdCreateParticle (1);
@@ -89,7 +91,7 @@ public class Impact_Effects : NetworkBehaviour {
 				RpcCreateParticle (1);
 			createdSmokeLow = true;
 		}
-		else if (health < 40 && !createdSmokeHigh)
+		else if (carhealth < 40 && !createdSmokeHigh)
 		{
 			if (isLocalPlayer)
 				CmdCreateParticle (2);
@@ -97,7 +99,7 @@ public class Impact_Effects : NetworkBehaviour {
 				RpcCreateParticle (2);
 			createdSmokeHigh = true;
 		}
-		else if (health < 20 && !createdFire)
+		else if (carhealth < 20 && !createdFire)
 		{
 			if (isLocalPlayer)
 				CmdCreateParticle (3);
@@ -105,7 +107,7 @@ public class Impact_Effects : NetworkBehaviour {
 				RpcCreateParticle (3);
 			createdFire = true;
 		}
-		else if (health <= 0)
+		else if (carhealth <= 0)
 		{
 			DestroyCar ();
 		}
