@@ -39,6 +39,7 @@ public class vehicleController : NetworkBehaviour {
 	[Range(0f,3000f)]
 	[ContextMenuItem("Reset 'Horsepower' to default", "resetHorsepower")]
 	public float horsepower = 220f;
+	private float maxHorsepower;
 	[Tooltip("Want responsive steering? Go higher!")]
 	[Range(0f,300f)]
 	[ContextMenuItem("Reset 'Steering' to default", "resetSteering")]
@@ -431,6 +432,8 @@ public class vehicleController : NetworkBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
+		maxHorsepower = horsepower;
+
 		inputX = 0f;
 		inputY = 0f;
 		
@@ -445,6 +448,14 @@ public class vehicleController : NetworkBehaviour {
 	{
 		if (!isLocalPlayer)
 			return;
+		
+		if(Input.GetButtonDown("Speed Limiter"))
+		{
+			if (horsepower < maxHorsepower)
+				horsepower = maxHorsepower;
+			else
+				horsepower = 60;
+		}
 		//track how many tires are touching the ground//
 		tiresOnGround = 0;
 		FtiresOnGround = 0;
