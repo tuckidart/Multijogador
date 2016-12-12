@@ -67,16 +67,31 @@ public class Impact_Effects : NetworkBehaviour {
 		carhealth = maxCarHealth;
 	}
 
-	[ClientRpc]
-	void RpcDestroyCar(GameObject car)
+	[Command]
+	void CmdDestroyCar()
 	{
 		//fazer explosão, etc...
-		car.GetComponent<vehicleController>().alive = false;
+		gameObject.GetComponent<vehicleController>().alive = false;
 		carhealth = 0;
 
-		if (car.tag == "Cop")
+		if (gameObject.tag == "Cop")
 			_GameMaster.GM.myObjectivesController.CallCarDied (true);
-		else if (car.tag == "Suspect")
+		else if (gameObject.tag == "Suspect")
+			_GameMaster.GM.myObjectivesController.CallCarDied (false);
+
+		//Destroy (gameObject);
+	}
+
+	[ClientRpc]
+	void RpcDestroyCar()
+	{
+		//fazer explosão, etc...
+		gameObject.GetComponent<vehicleController>().alive = false;
+		carhealth = 0;
+
+		if (gameObject.tag == "Cop")
+			_GameMaster.GM.myObjectivesController.CallCarDied (true);
+		else if (gameObject.tag == "Suspect")
 			_GameMaster.GM.myObjectivesController.CallCarDied (false);
 
 		//Destroy (gameObject);
@@ -112,8 +127,10 @@ public class Impact_Effects : NetworkBehaviour {
 		}
 		else if (carhealth <= 0)
 		{
-			if(isServer)
-				RpcDestroyCar (transform.gameObject);
+			if (isLocalPlayer)
+				CmdDestroyCar ();
+			else if (isServer)
+				RpcDestroyCar ();
 		}
 	}
 
