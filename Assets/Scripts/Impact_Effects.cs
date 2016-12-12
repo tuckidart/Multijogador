@@ -141,6 +141,7 @@ public class Impact_Effects : NetworkBehaviour {
 			break;
 		case 3:
 			particle = Instantiate (firePrefab, smokeTransform.position, Quaternion.identity) as GameObject;
+			smokeTransform.GetComponent<AudioSource> ().Play ();
 			break;
 		}
 
