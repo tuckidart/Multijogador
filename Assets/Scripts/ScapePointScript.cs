@@ -24,23 +24,25 @@ public class ScapePointScript : MonoBehaviour {
 
 	void OnTriggerEnter (Collider other)
 	{
-		if (other.transform.parent.parent.gameObject.tag == "Suspect") 
-		{
-			EnteredScapeTime = Time.time;
-			barUI.TurnChildrenOnOff (true);
-			Invoke ("CallSuspectEscaped", secondsToWait);
-			hasExited = false;
-		}
+		if (other.gameObject.tag == "colbody1")
+			if (other.transform.parent.parent.gameObject.tag == "Suspect") 
+			{
+				EnteredScapeTime = Time.time;
+				barUI.TurnChildrenOnOff (true);
+				Invoke ("CallSuspectEscaped", secondsToWait);
+				hasExited = false;
+			}
 	}
 
 	void OnTriggerExit (Collider other)
 	{
-		if (other.transform.parent.parent.gameObject.tag == "Suspect") 
-		{
-			barUI.TurnChildrenOnOff (false);
-			CancelInvoke ();
-			hasExited = true;
-		}
+		if (other.gameObject.tag == "colbody1")
+			if (other.transform.parent.parent.gameObject.tag == "Suspect") 
+			{
+				barUI.TurnChildrenOnOff (false);
+				CancelInvoke ();
+				hasExited = true;
+			}
 	}
 		
 	private void CallSuspectEscaped ()
