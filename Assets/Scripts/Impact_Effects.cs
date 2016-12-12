@@ -67,7 +67,8 @@ public class Impact_Effects : NetworkBehaviour {
 		carhealth = maxCarHealth;
 	}
 
-	void DestroyCar(GameObject car)
+	[ClientRpc]
+	void RpcDestroyCar(GameObject car)
 	{
 		//fazer explosão, etc...
 		car.GetComponent<vehicleController>().alive = false;
@@ -85,34 +86,35 @@ public class Impact_Effects : NetworkBehaviour {
 	{
 		CmdTakeDamage (damageTaken);
 
-//		if (carhealth < 70 && !createdSmokeLow)
-//		{
-//			if (isLocalPlayer)
-//				CmdCreateParticle (1);
-//			else if(isServer)
-//				RpcCreateParticle (1);
-//			createdSmokeLow = true;
-//		}
-//		else if (carhealth < 40 && !createdSmokeHigh)
-//		{
-//			if (isLocalPlayer)
-//				CmdCreateParticle (2);
-//			else if(isServer)
-//				RpcCreateParticle (2);
-//			createdSmokeHigh = true;
-//		}
-//		else if (carhealth < 20 && !createdFire)
-//		{
-//			if (isLocalPlayer)
-//				CmdCreateParticle (3);
-//			else if(isServer)
-//				RpcCreateParticle (3);
-//			createdFire = true;
-//		}
-//		else if (carhealth <= 0)
-//		{
-//			DestroyCar ();
-//		}
+		if (carhealth < 70 && !createdSmokeLow)
+		{
+			if (isLocalPlayer)
+				CmdCreateParticle (1);
+			else if(isServer)
+				RpcCreateParticle (1);
+			createdSmokeLow = true;
+		}
+		else if (carhealth < 40 && !createdSmokeHigh)
+		{
+			if (isLocalPlayer)
+				CmdCreateParticle (2);
+			else if(isServer)
+				RpcCreateParticle (2);
+			createdSmokeHigh = true;
+		}
+		else if (carhealth < 20 && !createdFire)
+		{
+			if (isLocalPlayer)
+				CmdCreateParticle (3);
+			else if(isServer)
+				RpcCreateParticle (3);
+			createdFire = true;
+		}
+		else if (carhealth <= 0)
+		{
+			if(isServer)
+				RpcDestroyCar (transform.gameObject);
+		}
 	}
 
 	[Command]
