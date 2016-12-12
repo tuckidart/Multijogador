@@ -17,7 +17,7 @@ public class bl_MiniMapItem : NetworkBehaviour {
     public Sprite Icon = null;
     public Sprite DeathIcon = null;
     public Color IconColor = new Color(1, 1, 1, 0.9f);
-    [Range(1,100)]public float Size = 20;
+    [Range(1,500)]public float Size = 20;
 
     [Separator("CIRCLE AREA")]
     public bool ShowCircleArea = false;

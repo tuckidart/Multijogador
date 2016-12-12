@@ -2,6 +2,13 @@
 using UnityEngine;
 using UnityEngine.Networking;
 
+public class MyMessage : MessageBase
+{
+	public NetworkInstanceId netId;
+	public int stuff;
+	public GameObject scape;
+}
+
 public class PlayerSetup : NetworkBehaviour {
 	public Camera cam;
 
@@ -9,16 +16,20 @@ public class PlayerSetup : NetworkBehaviour {
 
 	public GameObject suspectPointPrefab;
 	public GameObject policePointPrefab;
-	public GameObject scapePrefab;
 	private GameObject minimap;
 
 	[SerializeField]
 	Behaviour[] componentsToDisable;
 
+	short MyMsgId = 1000;
+	public override void OnStartClient()
+	{
+		NetworkManager.singleton.client.RegisterHandler (MyMsgId, OnMyMsg);
+	}
+
 	public override void OnStartLocalPlayer ()
 	{
 		cam = Camera.main;
-		//cam.GetComponent<cam>().carObj = this.gameObject;
 		cam.GetComponent<CameraFollow>().player = this.gameObject;
 		cam.GetComponent<CameraFollow> ().enabled = true;
 		cam.GetComponent<transparentBuildings> ().enabled = true;
@@ -46,8 +57,7 @@ public class PlayerSetup : NetworkBehaviour {
 			}
 			else if(gameObject.tag == "Suspect")
 			{
-				minimap.GetComponent<bl_MiniMap> ().LevelName = "Objective - Blend in and escape!";
-//				GameObject.FindGameObjectWithTag ("ScapeController").transform.GetComponent<ScapeController> ().aux = true;
+				minimap.GetComponent<bl_MiniMap> ().LevelName = "Objective - Blend in, rob stores and escape!";
 			}
 		}
 
@@ -55,6 +65,12 @@ public class PlayerSetup : NetworkBehaviour {
 
 		if(isServer)
 			CmdCreateInitialPoint (myPosition);
+	}
+
+	void Update()
+	{
+		if (Input.GetKeyDown (KeyCode.Space))
+			CmdSendToMe ();
 	}
 		
 	[Command]
@@ -64,7 +80,6 @@ public class PlayerSetup : NetworkBehaviour {
 			newItem = Instantiate (policePointPrefab, item.Position, Quaternion.identity) as GameObject;
 		else
 			newItem = Instantiate (suspectPointPrefab, item.Position, Quaternion.identity) as GameObject;
-		//bl _MiniMapItem mmItem = newItem.GetComponent<bl_MiniMapItem> ();
 
 		NetworkServer.Spawn (newItem);
 		Invoke ("DestroyPoint", 5f);
@@ -74,14 +89,25 @@ public class PlayerSetup : NetworkBehaviour {
 		newItem.GetComponent<bl_MiniMapItem>().RpcDestroyItem(true);
 	}
 
-	public void CreateScapePoint(bl_MMItemInfo item)
+	[Command]
+	void CmdSendToMe()
 	{
-		if(gameObject.tag == "Cop")
-			newItem = Instantiate (scapePrefab, item.Position, Quaternion.identity) as GameObject;
-		else
-			newItem = Instantiate (scapePrefab, item.Position, Quaternion.identity) as GameObject;
+		var msg = new MyMessage ();
+		msg.stuff = 2456986;
+		msg.netId = netId;
 
-		NetworkServer.Spawn (newItem);
-		//Invoke ("DestroyPoint", 5f);
+		base.connectionToClient.Send (MyMsgId, msg);
+	}
+
+	void DoStuff(int stuff)
+	{
+		Debug.Log ("Got msg " + stuff + " for " + gameObject);
+	}
+
+	static void OnMyMsg(NetworkMessage netMsg)
+	{
+		var msg = netMsg.ReadMessage<MyMessage> ();
+		var player = ClientScene.FindLocalObject (msg.netId);
+		player.GetComponent<PlayerSetup> ().DoStuff (msg.stuff);
 	}
 }

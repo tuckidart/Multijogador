@@ -61,7 +61,10 @@ public class ScapeController : NetworkBehaviour {
 	void CmdIntantiatePrefab()
 	{
 		GameObject temp = Instantiate (scapePointPrefab, scapePositions[currentScapeIndex].position, scapePositions[currentScapeIndex].rotation) as GameObject;
-		
+
+		temp.GetComponent<bl_MiniMapItem> ().OffSet.x = Random.Range (-45, 45);
+		temp.GetComponent<bl_MiniMapItem> ().OffSet.z = Random.Range (-70, 70);
+
 		NetworkServer.Spawn (temp);
 	}
 
