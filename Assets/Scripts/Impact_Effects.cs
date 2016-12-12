@@ -100,38 +100,6 @@ public class Impact_Effects : NetworkBehaviour {
 	void CheckCarHealth()
 	{
 		CmdTakeDamage (damageTaken);
-
-		if (carhealth < 70 && !createdSmokeLow)
-		{
-			if (isLocalPlayer)
-				CmdCreateParticle (1);
-			else if(isServer)
-				RpcCreateParticle (1);
-			createdSmokeLow = true;
-		}
-		else if (carhealth < 40 && !createdSmokeHigh)
-		{
-			if (isLocalPlayer)
-				CmdCreateParticle (2);
-			else if(isServer)
-				RpcCreateParticle (2);
-			createdSmokeHigh = true;
-		}
-		else if (carhealth < 20 && !createdFire)
-		{
-			if (isLocalPlayer)
-				CmdCreateParticle (3);
-			else if(isServer)
-				RpcCreateParticle (3);
-			createdFire = true;
-		}
-		else if (carhealth <= 0)
-		{
-			if (isLocalPlayer)
-				CmdDestroyCar ();
-			else if (isServer)
-				RpcDestroyCar ();
-		}
 	}
 
 	[Command]
@@ -183,12 +151,26 @@ public class Impact_Effects : NetworkBehaviour {
 	public void CmdTakeDamage(float dmg)
 	{
 		carhealth -= dmg;
-	}
 
-	[ClientRpc]
-	void RpcTakeDamage()
-	{
-		
+		if (carhealth < 70 && !createdSmokeLow)
+		{
+			RpcCreateParticle (1);
+			createdSmokeLow = true;
+		}
+		else if (carhealth < 40 && !createdSmokeHigh)
+		{
+			RpcCreateParticle (2);
+			createdSmokeHigh = true;
+		}
+		else if (carhealth < 20 && !createdFire)
+		{
+			RpcCreateParticle (3);
+			createdFire = true;
+		}
+		else if (carhealth <= 0)
+		{
+			RpcDestroyCar ();
+		}
 	}
 
 	void UpdateHealth(float newHealth)
