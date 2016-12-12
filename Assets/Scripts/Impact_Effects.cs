@@ -164,16 +164,12 @@ public class Impact_Effects : NetworkBehaviour {
 	public void CmdTakeDamage(float dmg)
 	{
 		carhealth -= dmg;
-		if (carhealth <= 0)
-		{
-			DestroyCar (transform.gameObject);
-		}
 	}
 
 	[ClientRpc]
 	void RpcTakeDamage()
 	{
-
+		
 	}
 
 	void UpdateHealth(float newHealth)
