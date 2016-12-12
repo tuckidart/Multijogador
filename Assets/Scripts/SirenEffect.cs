@@ -16,6 +16,7 @@ public class SirenEffect : NetworkBehaviour {
 	public bool inPursuit;
 
 	public AudioSource sirenAudio;
+	public AudioClip[] sirenType;
 	public GameObject sirenObject;
 
 	// Update is called once per frame
@@ -34,14 +35,22 @@ public class SirenEffect : NetworkBehaviour {
 	[Command]
 	public void CmdToggleSiren(bool OnOff)
 	{
-		inPursuit = OnOff;
-		RpcToggleSiren (inPursuit);
+		if(inPursuit && OnOff)
+		{
+			RpcSirenFast ();
+		}
+		else
+		{
+			inPursuit = OnOff;
+			RpcToggleSiren (inPursuit);
+		}
 	}
 
 	[ClientRpc]
 	void RpcToggleSiren(bool OnOff)
 	{
 		inPursuit = OnOff;
+		sirenAudio.clip = sirenType [0];
 
 		if (inPursuit)
 		{
@@ -53,5 +62,12 @@ public class SirenEffect : NetworkBehaviour {
 			sirenAudio.Stop ();
 			sirenObject.SetActive (false);
 		}
+	}
+
+	[ClientRpc]
+	void RpcSirenFast()
+	{
+		sirenAudio.clip = sirenType [1];
+		sirenAudio.Play ();
 	}
 }

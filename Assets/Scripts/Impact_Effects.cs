@@ -25,8 +25,10 @@ public class Impact_Effects : NetworkBehaviour {
 	private float damageTaken;
 
 	public float maxCarHealth = 100.0f;
-
 	private float damageConstant = 1.0f;
+
+	public AudioSource crash;
+	public AudioClip[] crashType;
 
 	// Use this for initialization
 	void Start () {
@@ -160,6 +162,7 @@ public class Impact_Effects : NetworkBehaviour {
 	public void CmdTakeDamage(float dmg)
 	{
 		carhealth -= dmg;
+		RpcPlayCollisionSound (dmg);
 
 		if (carhealth < 70 && !createdSmokeLow)
 		{
@@ -180,6 +183,24 @@ public class Impact_Effects : NetworkBehaviour {
 		{
 			RpcDestroyCar ();
 		}
+	}
+
+	[ClientRpc]
+	void RpcPlayCollisionSound(float dmg)
+	{
+		if(dmg > 10 && dmg < 15)
+		{
+			crash.clip = crashType[0];
+		}
+		else if(dmg > 15 && dmg < 25)
+		{
+			crash.clip = crashType[1];
+		}
+		else if(dmg > 25)
+		{
+			crash.clip = crashType[2];
+		}
+		crash.Play ();
 	}
 
 	void UpdateHealth(float newHealth)

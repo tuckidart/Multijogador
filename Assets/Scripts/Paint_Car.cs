@@ -56,7 +56,6 @@ public class Paint_Car : NetworkBehaviour {
 				CmdPaint (randTex);
 				damageEffects.ResetDamage();
 				canPaint = false;
-				autoRepairAudioSource.Play();
 			}	
 		}
 	}
@@ -75,11 +74,14 @@ public class Paint_Car : NetworkBehaviour {
 	void CmdPaint(int newTexture)
 	{
 		currentTexture = newTexture;
+		RpcPaintSound ();
 	}
 
 	[ClientRpc]
-	void RpcPaint(int newTexture)
+	void RpcPaintSound()
 	{
-		currentTexture = newTexture;
+//		currentTexture = newTexture;
+		if(autoRepairAudioSource != null)
+			autoRepairAudioSource.Play();
 	}
 }

@@ -46,11 +46,15 @@ public class Open_Door : MonoBehaviour {
 	{
 		openDoor = true;
 		closeDoor = false;
+		if(!GetComponent<AudioSource> ().isPlaying)
+			GetComponent<AudioSource> ().Play ();
 	}
 
 	void OnTriggerExit(Collider other)
 	{
 		closeDoor = true;
 		openDoor = false;
+		if(!GetComponent<AudioSource> ().isPlaying)
+			GetComponent<AudioSource> ().Play ();
 	}
 }
