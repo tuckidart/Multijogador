@@ -41,7 +41,7 @@ public class SirenEffect : NetworkBehaviour {
 		}
 		else
 		{
-			inPursuit = OnOff;
+//			inPursuit = OnOff;
 			RpcToggleSiren (inPursuit);
 		}
 	}
