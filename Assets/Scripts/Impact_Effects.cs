@@ -19,7 +19,7 @@ public class Impact_Effects : NetworkBehaviour {
 	private bool createdFire = false;
 	///////////////////////////////////////
 
-	[SyncVar]
+	[SyncVar (hook = "UpdateHealth")]
 	public float carhealth;
 	private float damageTaken;
 
@@ -44,7 +44,7 @@ public class Impact_Effects : NetworkBehaviour {
 	{
 		if (hit.relativeVelocity.magnitude > 10.0f && hit.gameObject.name != "Ground" && hit.gameObject.name != "Curb" )
 		{
-			damageTaken -= damageConstant * hit.relativeVelocity.magnitude;
+			damageTaken = damageConstant * hit.relativeVelocity.magnitude;
 
 			CheckCarHealth ();
 
@@ -82,6 +82,8 @@ public class Impact_Effects : NetworkBehaviour {
 
 	void CheckCarHealth()
 	{
+		CmdTakeDamage (damageTaken);
+
 		if (carhealth < 70 && !createdSmokeLow)
 		{
 			if (isLocalPlayer)
@@ -117,8 +119,6 @@ public class Impact_Effects : NetworkBehaviour {
 	{		
 		if (particle != null)
 			Destroy (particle);
-
-		carhealth -= damageTaken;
 		
 		switch(valor)
 		{
@@ -143,8 +143,6 @@ public class Impact_Effects : NetworkBehaviour {
 		if (particle != null)
 			Destroy (particle);
 
-		carhealth -= damageTaken;
-
 		switch(valor)
 		{
 		case 1:
@@ -159,5 +157,16 @@ public class Impact_Effects : NetworkBehaviour {
 		}
 
 		particle.transform.parent = transform;
+	}
+
+	[Command]
+	public void CmdTakeDamage(float dmg)
+	{
+		carhealth -= dmg;
+	}
+
+	void UpdateHealth(float newHealth)
+	{
+		carhealth = newHealth;
 	}
 }
