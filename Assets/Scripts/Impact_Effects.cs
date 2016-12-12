@@ -54,7 +54,15 @@ public class Impact_Effects : NetworkBehaviour {
 				minimap.GetComponent<bl_MiniMap> ().DoHitEffect ();
 				cam.GetComponent<cameraShake> ().Shake ();
 			}
-			//GetComponent<AudioSource> ().Play();
+		}
+	}
+
+	void OnTriggerEnter(Collider hit)
+	{
+		if(hit.gameObject.name == "Water")
+		{
+			Debug.Log ("cai na agua");
+			CmdTakeDamage (carhealth);
 		}
 	}
 
