@@ -24,12 +24,18 @@ public class Radar : NetworkBehaviour {
 	{
 		if(isLocalPlayer)
 			if (Input.GetButtonDown ("Jump"))
-				RadarScan ();
+			{
+				if(objFound == null)
+					RadarScan ();
+				else
+					sirenEffectScript.CmdToggleSiren(true);
+			}
 
 		if(objFound != null)
 			if(Vector3.Distance(transform.position, objFound.transform.position) > distanceToLoseSuspect)
 			{
 				highlightedObj.GetComponent<Renderer>().material.shader = notHighlighted;
+				objFound = null;
 				sirenEffectScript.CmdToggleSiren(false);
 			}
 	}
@@ -40,7 +46,7 @@ public class Radar : NetworkBehaviour {
 
 		for(int i=0;i<hitColliders.Length;i++)
 		{
-			if (hitColliders [i].transform.parent.name == "bodyRef")
+			if (hitColliders [i].transform.name == "colbody1")
 			{
 				if(hitColliders [i].transform.parent.parent.gameObject.tag == "Suspect")
 				{

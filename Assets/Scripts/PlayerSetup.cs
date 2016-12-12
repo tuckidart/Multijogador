@@ -21,11 +21,11 @@ public class PlayerSetup : NetworkBehaviour {
 	[SerializeField]
 	Behaviour[] componentsToDisable;
 
-	short MyMsgId = 1000;
-	public override void OnStartClient()
-	{
-		NetworkManager.singleton.client.RegisterHandler (MyMsgId, OnMyMsg);
-	}
+//	short MyMsgId = 1000;
+//	public override void OnStartClient()
+//	{
+//		NetworkManager.singleton.client.RegisterHandler (MyMsgId, OnMyMsg);
+//	}
 
 	public override void OnStartLocalPlayer ()
 	{
@@ -67,11 +67,11 @@ public class PlayerSetup : NetworkBehaviour {
 			CmdCreateInitialPoint (myPosition);
 	}
 
-	void Update()
-	{
-		if (Input.GetKeyDown (KeyCode.Space))
-			CmdSendToMe ();
-	}
+//	void Update()
+//	{
+//		if (Input.GetKeyDown (KeyCode.Space))
+//			CmdSendToMe ();
+//	}
 		
 	[Command]
 	public void CmdCreateInitialPoint(bl_MMItemInfo item)
@@ -89,25 +89,25 @@ public class PlayerSetup : NetworkBehaviour {
 		newItem.GetComponent<bl_MiniMapItem>().RpcDestroyItem(true);
 	}
 
-	[Command]
-	void CmdSendToMe()
-	{
-		var msg = new MyMessage ();
-		msg.stuff = 2456986;
-		msg.netId = netId;
-
-		base.connectionToClient.Send (MyMsgId, msg);
-	}
-
-	void DoStuff(int stuff)
-	{
-		Debug.Log ("Got msg " + stuff + " for " + gameObject);
-	}
-
-	static void OnMyMsg(NetworkMessage netMsg)
-	{
-		var msg = netMsg.ReadMessage<MyMessage> ();
-		var player = ClientScene.FindLocalObject (msg.netId);
-		player.GetComponent<PlayerSetup> ().DoStuff (msg.stuff);
-	}
+//	[Command]
+//	void CmdSendToMe()
+//	{
+//		var msg = new MyMessage ();
+//		msg.stuff = 2456986;
+//		msg.netId = netId;
+//
+//		base.connectionToClient.Send (MyMsgId, msg);
+//	}
+//
+//	void DoStuff(int stuff)
+//	{
+//		Debug.Log ("Got msg " + stuff + " for " + gameObject);
+//	}
+//
+//	static void OnMyMsg(NetworkMessage netMsg)
+//	{
+//		var msg = netMsg.ReadMessage<MyMessage> ();
+//		var player = ClientScene.FindLocalObject (msg.netId);
+//		player.GetComponent<PlayerSetup> ().DoStuff (msg.stuff);
+//	}
 }

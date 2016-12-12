@@ -35,13 +35,14 @@ public class SirenEffect : NetworkBehaviour {
 	[Command]
 	public void CmdToggleSiren(bool OnOff)
 	{
-		if(inPursuit && OnOff)
+		if(inPursuit == true && OnOff == true)
 		{
 			RpcSirenFast ();
 		}
 		else
 		{
-//			inPursuit = OnOff;
+			inPursuit = OnOff;
+			sirenAudio.clip = sirenType [0];
 			RpcToggleSiren (inPursuit);
 		}
 	}
@@ -54,8 +55,8 @@ public class SirenEffect : NetworkBehaviour {
 
 		if (inPursuit)
 		{
-			sirenAudio.Play ();
 			sirenObject.SetActive (true);
+			sirenAudio.Play ();
 		}
 		else
 		{
@@ -67,7 +68,11 @@ public class SirenEffect : NetworkBehaviour {
 	[ClientRpc]
 	void RpcSirenFast()
 	{
-		sirenAudio.clip = sirenType [1];
+		if(sirenAudio.clip == sirenType [0])
+			sirenAudio.clip = sirenType [1];
+		else if(sirenAudio.clip == sirenType [1])
+			sirenAudio.clip = sirenType [0];
+		
 		sirenAudio.Play ();
 	}
 }
