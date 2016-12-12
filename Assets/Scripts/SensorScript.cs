@@ -28,6 +28,9 @@ public class SensorScript : NetworkBehaviour {
 
 	void Start () 
 	{
+		if (!isServer)
+			return;
+		
 		controller = transform.parent.GetComponent<vehicleController>();
 		myCarState = transform.parent.GetComponent<State>();
 
@@ -42,7 +45,7 @@ public class SensorScript : NetworkBehaviour {
 	void Update()
 	{
 		if (!isServer)
-			enabled = false;
+			return;
 		//adjust sensorSize and position accordingly to car's velocity
 		carVel = controller.zVel;
 		InterpolateTransform ();
@@ -63,6 +66,8 @@ public class SensorScript : NetworkBehaviour {
 
 	void OnTriggerEnter (Collider other)
 	{
+		if (!isServer)
+			return;
 		//Put any other needed tags here
 		if (other.tag == "Car")
 		{
@@ -81,15 +86,17 @@ public class SensorScript : NetworkBehaviour {
 
 	void OnTriggerExit (Collider other)
 	{
+		if (!isServer)
+			return;
 		//Put any other needed tags here
 		if (other.tag == "Car" || other.tag == "Curve" || other.tag == "Light")
 		{
 			myCarState.RemoveObstacle (other.transform);
 		}
 	}
-
-	void FireRayCast ()
-	{
-
-	}
+//
+//	void FireRayCast ()
+//	{
+//
+//	}
 }

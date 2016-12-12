@@ -34,19 +34,6 @@ public class Paint_Car : NetworkBehaviour {
 				CmdPaint (randTex);
 			}
 		}
-		else if (gameObject.tag == "AI Car")
-		{
-			if(isServer)
-			{
-				int randTex = Random.Range (0, textureList.Count);
-				RpcPaint (randTex);
-			}
-			else
-			{
-				int randTex = Random.Range (0, textureList.Count);
-				CmdPaint (randTex);
-			}
-		}
 	}
 
 	void OnTriggerEnter(Collider hit)

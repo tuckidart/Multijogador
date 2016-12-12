@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
-public class LightScript : MonoBehaviour {
+public class LightScript : NetworkBehaviour {
 
 	public bool isGreen;
 	public Light lightColor;

@@ -38,18 +38,11 @@ public class State : NetworkBehaviour {
 
 	private vehicleController controller;
 
-//	void Awake () 
-//	{
-//		obstacles = new Transform[2];
-//		currentObstacleType = new ObstacleType[2];
-//		controller = GetComponent<vehicleController> ();
-//		turnedOn = false;
-//		moving = false;
-//		directionMultiplier = 1;
-//	}
-
 	void Start ()
 	{
+		if (!isServer)
+			return;
+		
 		obstacles = new Transform[2];
 		currentObstacleType = new ObstacleType[2];
 		controller = GetComponent<vehicleController> ();
@@ -63,7 +56,7 @@ public class State : NetworkBehaviour {
 	void Update ()
 	{
 		if (!isServer)
-			enabled = false;
+			return;
 		
 		for(int i=0;i<currentObstacleType.Length;i++)
 		{
@@ -90,6 +83,8 @@ public class State : NetworkBehaviour {
 
 	void FixedUpdate ()
 	{
+		if (!isServer)
+			return;
 		//Apply values to the car
 		ApplyValues ();
 	}

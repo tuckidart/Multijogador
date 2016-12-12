@@ -689,19 +689,20 @@ public class vehicleController : NetworkBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () 
 	{
-		if(base.isLocalPlayer)
+		if (base.isLocalPlayer)
 		{
 			//input//
-			inputX = Mathf.SmoothStep(inputX,Input.GetAxis("Horizontal"),(steering*0.2f)*Time.deltaTime);
-			inputY = Input.GetAxis("Vertical");
+			inputX = Mathf.SmoothStep (inputX, Input.GetAxis ("Horizontal"), (steering * 0.2f) * Time.deltaTime);
+			inputY = Input.GetAxis ("Vertical");
 		}
-		if(isServer && transform.tag == "AI_Car")
+		else if (isServer && !isLocalPlayer)
 		{
+//			Debug.Log ("entrei aqui!");
 			if (inputX > 1.0f)
 				inputX = 1.0f;
 			else if (inputX < -1.0f)
 				inputX = -1.0f;
-
+			
 			if (inputY > 1.0f)
 				inputY = 1.0f;
 			else if (inputY < -1.0f)
