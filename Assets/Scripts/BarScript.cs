@@ -9,11 +9,24 @@ public class BarScript : MonoBehaviour {
 	public float maxValue;
 	public float currentValue;
 
+	void Start ()
+	{
+		TurnChildrenOnOff (false);
+	}
+
 	void Update ()
 	{
 		if (updateAutomatically) 
 		{
 			mySlider.value = currentValue / maxValue;	
+		}
+	}
+
+	public void TurnChildrenOnOff (bool newStatus)
+	{
+		for (int i = 0; i < transform.childCount; i++) 
+		{
+			transform.GetChild (i).gameObject.SetActive (newStatus);
 		}
 	}
 

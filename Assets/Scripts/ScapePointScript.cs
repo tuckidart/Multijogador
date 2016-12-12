@@ -4,14 +4,30 @@ using System.Collections;
 public class ScapePointScript : MonoBehaviour {
 
 	public float secondsToWait;
+	public BarScript barUI;
 
 	private bool hasExited;
+
+	private float EnteredScapeTime;
+
+	void Start ()
+	{
+		barUI = GameObject.FindGameObjectWithTag ("ScapeSlider").GetComponent<BarScript> ();
+		barUI.maxValue = secondsToWait;
+		barUI.updateAutomatically = false;
+	}
+
+	void Update ()
+	{
+		barUI.SetCurrentValue(Time.time - EnteredScapeTime + 0.25f); 
+	}
 
 	void OnTriggerEnter (Collider other)
 	{
 		if (other.transform.parent.parent.gameObject.tag == "Suspect") 
 		{
-			//_GameMaster.GM.myObjectivesController.CallSupectScaped ();
+			EnteredScapeTime = Time.time;
+			barUI.TurnChildrenOnOff (true);
 			Invoke ("CallSuspectEscaped", secondsToWait);
 			hasExited = false;
 		}
@@ -21,10 +37,12 @@ public class ScapePointScript : MonoBehaviour {
 	{
 		if (other.transform.parent.parent.gameObject.tag == "Suspect") 
 		{
+			barUI.TurnChildrenOnOff (false);
+			CancelInvoke ();
 			hasExited = true;
 		}
 	}
-
+		
 	private void CallSuspectEscaped ()
 	{
 		if (hasExited == false) 
