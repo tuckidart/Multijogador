@@ -19,7 +19,8 @@ public class LightScript : NetworkBehaviour {
 		//initialY = transform.position.y;
 	}
 
-	public void ToggleLight ()
+	[ClientRpc]
+	public void RpcToggleLight ()
 	{
 		if (isGreen) 
 		{

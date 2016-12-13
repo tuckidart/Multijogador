@@ -1,15 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 
-public class LightsManager : MonoBehaviour {
+public class LightsManager : NetworkBehaviour {
 
 	[SerializeField]
 	private float timeBetweenLightTransitions;
 
 	private List<LightScript> lights;
 
-//	[SyncVar]
+	[SyncVar]
 	public int currentActiveLightIndex;
 
 	void Awake ()
@@ -24,38 +25,35 @@ public class LightsManager : MonoBehaviour {
 			lights.Add (transform.GetChild(i).gameObject.GetComponent<LightScript> ());
 		}
 
-		Choose ();
+		CmdChoose ();
 	}
 
-//	[Command]
-	void Choose()
+	[Command]
+	void CmdChoose()
 	{
-//		int aux = Random.Range (0, lights.Count);
-//		RpcChooseStartingLights (aux);
+		int aux = Random.Range (0, lights.Count);
+		RpcChooseStartingLights (aux);
 
-		currentActiveLightIndex = 0;
-		lights [0].ToggleLight ();
-
-		InvokeRepeating("GoToNextLight", timeBetweenLightTransitions, timeBetweenLightTransitions);
+		InvokeRepeating("RpcGoToNextLight", timeBetweenLightTransitions, timeBetweenLightTransitions);
 	}
 
-//	[ClientRpc]
-//	void RpcChooseStartingLights(int index)
-//	{
-//		currentActiveLightIndex = index;
-//		lights [index].ToggleLight ();
-//	}
-
-//	[ClientRpc]
-	void GoToNextLight ()
+	[ClientRpc]
+	void RpcChooseStartingLights(int index)
 	{
-		lights [currentActiveLightIndex].ToggleLight ();
+		currentActiveLightIndex = index;
+		lights [index].RpcToggleLight ();
+	}
+
+	[ClientRpc]
+	void RpcGoToNextLight ()
+	{
+		lights [currentActiveLightIndex].RpcToggleLight ();
 
 		currentActiveLightIndex++;
 
 		if (currentActiveLightIndex >= lights.Count)
 			currentActiveLightIndex = 0;
 
-		lights [currentActiveLightIndex].ToggleLight ();
+		lights [currentActiveLightIndex].RpcToggleLight ();
 	}
 }
