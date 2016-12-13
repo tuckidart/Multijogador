@@ -19,12 +19,12 @@ public class ScapePointScript : MonoBehaviour {
 
 	void Update ()
 	{
-		barUI.SetCurrentValue(Time.time - EnteredScapeTime + 0.25f); 
+		barUI.SetCurrentValue(Time.time - EnteredScapeTime + 0.25f);
 	}
 
 	void OnTriggerEnter (Collider other)
 	{
-		if (other.gameObject.tag == "colbody1")
+		if (other.gameObject.name == "colbody1")
 			if (other.transform.parent.parent.gameObject.tag == "Suspect") 
 			{
 				EnteredScapeTime = Time.time;
@@ -36,7 +36,7 @@ public class ScapePointScript : MonoBehaviour {
 
 	void OnTriggerExit (Collider other)
 	{
-		if (other.gameObject.tag == "colbody1")
+		if (other.gameObject.name == "colbody1")
 			if (other.transform.parent.parent.gameObject.tag == "Suspect") 
 			{
 				barUI.TurnChildrenOnOff (false);

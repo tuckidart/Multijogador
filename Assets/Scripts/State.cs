@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 public class State : NetworkBehaviour {
 
 	private Transform currentWaypoint;
-	private Transform cantGoToThisWaypoint;
+	public Transform cantGoToThisWaypoint;
 	private Transform currentTrafficLights;
 	private bool lightAux;
 
@@ -214,11 +214,11 @@ public class State : NetworkBehaviour {
 		RaycastHit[] hits;
 		hits = Physics.RaycastAll(transform.position, transform.forward, 100.0F);
 
-		for (int i = 0; i < hits.Length; i++) {
-
+		for (int i = 0; i < hits.Length; i++)
+		{
 			RaycastHit hit = hits[i];
 
-			if (hits[i].transform.tag == "Curve") 
+			if (hits[i].transform.tag == "Curve")
 			{
 				currentWaypoint = hits[i].transform;
 
