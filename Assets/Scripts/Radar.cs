@@ -4,6 +4,7 @@ using UnityEngine.Networking;
 
 public class Radar : NetworkBehaviour {
 
+	public float useCost;
 	public float radius;
 	private GameObject objFound;
 	private GameObject highlightedObj;
@@ -13,10 +14,23 @@ public class Radar : NetworkBehaviour {
 
 	private SirenEffect sirenEffectScript;
 
+	private float cooldownValue;
+	private BarScript barUI;
+
 	// Use this for initialization
 	void Start ()
 	{
 		sirenEffectScript = GetComponent<SirenEffect> ();
+
+		cooldownValue = 0;
+
+		if (isLocalPlayer && gameObject.tag == "Cop") 
+		{
+			barUI = GameObject.FindGameObjectWithTag ("RadarSlider").GetComponent<BarScript> ();
+			barUI.maxValue = 100;
+			barUI.updateAutomatically = false;
+			barUI.TurnChildrenOnOff (true);
+		}
 	}
 	
 	// Update is called once per frame
@@ -38,26 +52,42 @@ public class Radar : NetworkBehaviour {
 				objFound = null;
 				sirenEffectScript.CmdToggleSiren(false);
 			}
+			
+		IncreaseCooldown ();
 	}
 
 	void RadarScan()
 	{
-		Collider[] hitColliders = Physics.OverlapSphere(gameObject.transform.position, radius);
-
-		for(int i=0;i<hitColliders.Length;i++)
+		if (cooldownValue > useCost)
 		{
-			if (hitColliders [i].transform.name == "colbody1")
-			{
-				if(hitColliders [i].transform.parent.parent.gameObject.tag == "Suspect")
-				{
-					objFound = hitColliders [i].transform.parent.gameObject;
-					highlightedObj = objFound.transform.Find("body").gameObject;
-					highlightedObj.GetComponent<Renderer>().material.shader = highlighted;
+			Collider[] hitColliders = Physics.OverlapSphere(gameObject.transform.position, radius);
 
-					sirenEffectScript.CmdToggleSiren(true);
-					Debug.Log ("VAGABUNDO ENCONTRADO!");
+			for(int i=0;i<hitColliders.Length;i++)
+			{
+				if (hitColliders [i].transform.name == "colbody1")
+				{
+					if(hitColliders [i].transform.parent.parent.gameObject.tag == "Suspect")
+					{
+						objFound = hitColliders [i].transform.parent.gameObject;
+						highlightedObj = objFound.transform.Find("body").gameObject;
+						highlightedObj.GetComponent<Renderer>().material.shader = highlighted;
+
+						sirenEffectScript.CmdToggleSiren(true);
+						Debug.Log ("VAGABUNDO ENCONTRADO!");
+					}
 				}
 			}
+
+			cooldownValue -= useCost;
 		}
+	}
+
+	private void IncreaseCooldown ()
+	{
+		if (cooldownValue <= 100f)
+			cooldownValue += (0.9f * Time.deltaTime) * 3f;
+
+		if (barUI)
+			barUI.SetCurrentValue(cooldownValue);
 	}
 }
