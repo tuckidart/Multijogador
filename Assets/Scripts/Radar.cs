@@ -24,7 +24,7 @@ public class Radar : NetworkBehaviour {
 
 		cooldownValue = 0;
 
-		if (isLocalPlayer && gameObject.tag == "Cop") 
+		if (isLocalPlayer && gameObject.tag == "Cop")
 		{
 			barUI = GameObject.FindGameObjectWithTag ("RadarSlider").GetComponent<BarScript> ();
 			barUI.maxValue = 100;

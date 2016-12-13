@@ -4,6 +4,7 @@ using UnityEngine.Networking;
 
 public class LightScript : NetworkBehaviour {
 
+	[SyncVar]
 	public bool isGreen;
 	public Light lightColor;
 	private Color red = new Color (255, 0, 0);

@@ -20,7 +20,10 @@ public class LightsManager : NetworkBehaviour {
 
 	void Start () 
 	{
-		for (int i = 0; i < transform.childCount; i++) 
+		if (!isServer)
+			return;
+		
+		for (int i = 0; i < transform.childCount; i++)
 		{
 			lights.Add (transform.GetChild(i).gameObject.GetComponent<LightScript> ());
 		}

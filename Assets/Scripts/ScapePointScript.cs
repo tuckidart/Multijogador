@@ -6,7 +6,7 @@ public class ScapePointScript : MonoBehaviour {
 	public float secondsToWait;
 	public BarScript barUI;
 
-	private bool hasExited;
+	private bool hasEntered;
 
 	private float EnteredScapeTime;
 
@@ -19,7 +19,8 @@ public class ScapePointScript : MonoBehaviour {
 
 	void Update ()
 	{
-		barUI.SetCurrentValue(Time.time - EnteredScapeTime + 0.25f);
+		if(hasEntered)
+			barUI.SetCurrentValue(Time.time - EnteredScapeTime + 0.25f);
 	}
 
 	void OnTriggerEnter (Collider other)
@@ -30,7 +31,7 @@ public class ScapePointScript : MonoBehaviour {
 				EnteredScapeTime = Time.time;
 				barUI.TurnChildrenOnOff (true);
 				Invoke ("CallSuspectEscaped", secondsToWait);
-				hasExited = false;
+				hasEntered = true;
 			}
 	}
 
@@ -41,13 +42,13 @@ public class ScapePointScript : MonoBehaviour {
 			{
 				barUI.TurnChildrenOnOff (false);
 				CancelInvoke ();
-				hasExited = true;
+				hasEntered = false;
 			}
 	}
 		
 	private void CallSuspectEscaped ()
 	{
-		if (hasExited == false) 
+		if (hasEntered == true)
 			_GameMaster.GM.myObjectivesController.CallSupectScaped ();
 	}
 }

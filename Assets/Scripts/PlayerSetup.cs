@@ -11,6 +11,7 @@ public class MyMessage : MessageBase
 
 public class PlayerSetup : NetworkBehaviour {
 	public Camera cam;
+	private GameObject moneyTextObject;
 
 	private GameObject newItem;
 
@@ -34,6 +35,7 @@ public class PlayerSetup : NetworkBehaviour {
 		cam.GetComponent<CameraFollow> ().enabled = true;
 		cam.GetComponent<transparentBuildings> ().enabled = true;
 		cam.GetComponent<transparentBuildings> ().player = this.gameObject;
+		moneyTextObject = GameObject.Find ("MoneyText");
 	}
 
 	void Start()
@@ -45,7 +47,7 @@ public class PlayerSetup : NetworkBehaviour {
 				componentsToDisable [i].enabled = false;
 			}
 		}
-		else
+		else if (base.isLocalPlayer)
 		{
 			minimap = GameObject.Find ("MiniMap").gameObject;
 			minimap.GetComponent<bl_MiniMap> ().m_Target = gameObject;
@@ -54,10 +56,12 @@ public class PlayerSetup : NetworkBehaviour {
 			if(gameObject.tag == "Cop")
 			{
 				minimap.GetComponent<bl_MiniMap> ().LevelName = "Objective - Locate, and Apprehend!";
+				moneyTextObject.SetActive (false);
 			}
 			else if(gameObject.tag == "Suspect")
 			{
 				minimap.GetComponent<bl_MiniMap> ().LevelName = "Objective - Blend in, rob stores and escape!";
+				moneyTextObject.SetActive (true);
 			}
 		}
 
