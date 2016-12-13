@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.Networking;
 
-public class LightsManager : NetworkBehaviour {
+public class LightsManager : MonoBehaviour {
 
 	[SerializeField]
 	private float timeBetweenLightTransitions;
@@ -40,12 +39,12 @@ public class LightsManager : NetworkBehaviour {
 		InvokeRepeating("GoToNextLight", timeBetweenLightTransitions, timeBetweenLightTransitions);
 	}
 
-	[ClientRpc]
-	void RpcChooseStartingLights(int index)
-	{
-		currentActiveLightIndex = index;
-		lights [index].ToggleLight ();
-	}
+//	[ClientRpc]
+//	void RpcChooseStartingLights(int index)
+//	{
+//		currentActiveLightIndex = index;
+//		lights [index].ToggleLight ();
+//	}
 
 //	[ClientRpc]
 	void GoToNextLight ()

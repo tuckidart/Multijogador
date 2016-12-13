@@ -68,13 +68,21 @@ public class Impact_Effects : NetworkBehaviour {
 		}
 	}
 
-	public void ResetDamage()
+	[Command]
+	public void CmdResetDamage()
+	{
+		RpcResetDamage();
+	}
+
+	[ClientRpc]
+	public void RpcResetDamage()
 	{
 		Destroy (particle);
 		createdSmokeLow = false;
 		createdSmokeHigh = false;
 		createdFire = false;
 		carhealth = maxCarHealth;
+		smokeTransform.GetComponent<AudioSource> ().Stop ();
 	}
 
 	[Command]
