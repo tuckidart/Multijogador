@@ -10,7 +10,8 @@ public class LightsManager : NetworkBehaviour {
 
 	private List<LightScript> lights;
 
-	private int currentActiveLightIndex;
+	[SyncVar]
+	public int currentActiveLightIndex;
 
 	void Awake ()
 	{
@@ -24,15 +25,16 @@ public class LightsManager : NetworkBehaviour {
 			lights.Add (transform.GetChild(i).gameObject.GetComponent<LightScript> ());
 		}
 
-		if(isServer)
-		{
-			int aux = Random.Range (0, lights.Count);
-			currentActiveLightIndex = aux;
-			lights [aux].ToggleLight ();
-			RpcChooseStartingLights (aux);
+		CmdChoose ();
+	}
 
-			InvokeRepeating("RpcGoToNextLight", timeBetweenLightTransitions, timeBetweenLightTransitions);
-		}
+	[Command]
+	void CmdChoose()
+	{
+		int aux = Random.Range (0, lights.Count);
+		RpcChooseStartingLights (aux);
+
+		InvokeRepeating("RpcGoToNextLight", timeBetweenLightTransitions, timeBetweenLightTransitions);
 	}
 
 	[ClientRpc]
