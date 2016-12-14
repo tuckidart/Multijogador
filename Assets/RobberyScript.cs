@@ -20,18 +20,21 @@ public class RobberyScript : NetworkBehaviour {
 	private PlayerSetup suspectSetup;
 	private bool lateStartCalled;
 
+	public GameObject RobberyPointPrefab;
+	private GameObject temp;
+
 	void Awake ()
 	{
-		barUI = GameObject.FindGameObjectWithTag ("RoberySlider").GetComponent<BarScript> ();
-		barUI.maxValue = secondsToWait;
-		barUI.updateAutomatically = false;
-
 		moneyText.text ="$00" + moneyHundreds.ToString() + ",00";
 	}
 
 	void Start ()
 	{
-		Invoke ("LateStartFake", 1f); 
+		barUI = GameObject.FindGameObjectWithTag ("RoberySlider").GetComponent<BarScript> ();
+		barUI.maxValue = secondsToWait;
+		barUI.updateAutomatically = false;
+
+		Invoke ("LateStartFake", 1f);
 	}
 
 	void Update ()
@@ -56,6 +59,13 @@ public class RobberyScript : NetworkBehaviour {
 				hasEntered = true;
 				EnteredRobberyTime = Time.time;
 				Invoke ("EndRobbery", secondsToWait - completedTime);
+
+				bl_MMItemInfo myPosition = new bl_MMItemInfo(transform.position);
+
+				if (isServer)
+				{
+					CmdCreateRobberyPoint (myPosition);
+				}
 			}
 		}
 	}
@@ -73,8 +83,34 @@ public class RobberyScript : NetworkBehaviour {
 				CancelInvoke ();
 
 				completedTime += Time.time - EnteredRobberyTime + 0.25f;
+
+				if(temp != null)
+					temp.GetComponent<bl_MiniMapItem>().RpcDestroyItem(true);
+
+				if(isServer)
+					RpcShowItem ();
 			}
 		}
+	}
+
+	[Command]
+	void CmdCreateRobberyPoint(bl_MMItemInfo item)
+	{
+		RpcHideItem ();
+		temp = Instantiate (RobberyPointPrefab, item.Position, Quaternion.identity) as GameObject;
+
+		NetworkServer.Spawn (temp);
+		Invoke ("DestroyPoint", secondsToWait - completedTime);
+	}
+	[ClientRpc]
+	void  RpcShowItem()
+	{
+		GetComponent<bl_MiniMapItem> ().ShowItem();
+	}
+	[ClientRpc]
+	void  RpcHideItem()
+	{
+		GetComponent<bl_MiniMapItem> ().HideItem();
 	}
 		
 	private void EndRobbery ()
@@ -89,6 +125,7 @@ public class RobberyScript : NetworkBehaviour {
 	}		
 	void DestroyPoint()
 	{
+		temp.GetComponent<bl_MiniMapItem>().RpcDestroyItem(true);
 		GetComponent<bl_MiniMapItem>().RpcDestroyItem(true);
 	}
 
@@ -128,7 +165,6 @@ public class RobberyScript : NetworkBehaviour {
 
 	private void LateStartFake ()
 	{
-		Debug.Log ("uehauehaueh");
 		suspectSetup = GameObject.FindGameObjectWithTag ("Suspect").GetComponent<PlayerSetup> ();
 	}
 //	[Command]

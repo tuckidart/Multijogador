@@ -42,7 +42,6 @@ public class LightsManager : NetworkBehaviour {
 		
 	void ChooseStartingLights(int index)
 	{
-		Debug.Log ("entrei");
 		currentActiveLightIndex = index;
 		lights [index].RpcToggleLight ();
 	}
