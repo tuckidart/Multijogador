@@ -27,7 +27,7 @@ public class LightsManager : NetworkBehaviour {
 		{
 			lights.Add (transform.GetChild(i).gameObject.GetComponent<LightScript> ());
 		}
-
+			
 		CmdChoose ();
 	}
 
@@ -43,6 +43,7 @@ public class LightsManager : NetworkBehaviour {
 	[ClientRpc]
 	void RpcChooseStartingLights(int index)
 	{
+		Debug.Log ("entrei");
 		currentActiveLightIndex = index;
 		lights [index].RpcToggleLight ();
 	}

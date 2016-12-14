@@ -40,9 +40,10 @@ public class RobberyScript : NetworkBehaviour {
 		if (other.gameObject.name == "colbody1")
 			if (other.transform.parent.parent.gameObject.tag == "Suspect") 
 			{
-				hasEntered = true;
-				barUI.TurnChildrenOnOff (true);
+				if(other.transform.parent.parent.gameObject.GetComponent<NetworkIdentity>().isLocalPlayer)
+					barUI.TurnChildrenOnOff (true);
 
+				hasEntered = true;
 				EnteredRobberyTime = Time.time;
 				Invoke ("EndRobbery", secondsToWait);
 			}
@@ -53,8 +54,10 @@ public class RobberyScript : NetworkBehaviour {
 		if (other.gameObject.name == "colbody1")
 			if (other.transform.parent.parent.gameObject.tag == "Suspect") 
 			{
+				if(other.transform.parent.parent.gameObject.GetComponent<NetworkIdentity>().isLocalPlayer)
+					barUI.TurnChildrenOnOff (false);
+			
 				hasEntered = false;
-				barUI.TurnChildrenOnOff (false);
 				CancelInvoke ();
 			}
 	}
