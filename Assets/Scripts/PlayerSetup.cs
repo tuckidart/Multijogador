@@ -11,6 +11,11 @@ public class MyMessage : MessageBase
 
 public class PlayerSetup : NetworkBehaviour {
 	public Camera cam;
+
+	private int moneyThousands;
+	private int moneyHundreds;
+	private int moneyMultiplier;
+
 	private GameObject moneyTextObject;
 
 	private GameObject newItem;
@@ -40,6 +45,8 @@ public class PlayerSetup : NetworkBehaviour {
 
 	void Start()
 	{
+		moneyMultiplier = 1;
+
 		if (!base.isLocalPlayer && componentsToDisable.Length > 0)
 		{
 			for (int i = 0; i < componentsToDisable.Length; i++)
@@ -77,6 +84,41 @@ public class PlayerSetup : NetworkBehaviour {
 //			CmdSendToMe ();
 //	}
 		
+	public void IncreaseMultiplier ()
+	{
+		moneyMultiplier += 1;
+	}
+
+	public void SetMoneyThousands (int value)
+	{
+		moneyThousands = value;
+	}
+
+	public void SetMoneyHundreds (int value)
+	{
+		moneyHundreds = value;
+	}
+
+	public void AddMoneyThousands (int value)
+	{
+		moneyThousands += value;
+	}
+
+	public void AddMoneyHundreds (int value)
+	{
+		moneyHundreds += value + moneyMultiplier;
+	}
+
+	public int GetMoneyThousands ()
+	{
+		return moneyThousands;
+	}
+
+	public int GetMoneyHundreds ()
+	{
+		return moneyHundreds;
+	}
+
 	[Command]
 	public void CmdCreateInitialPoint(bl_MMItemInfo item)
 	{
