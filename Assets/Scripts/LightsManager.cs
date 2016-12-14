@@ -35,13 +35,12 @@ public class LightsManager : NetworkBehaviour {
 	void CmdChoose()
 	{
 		int aux = Random.Range (0, lights.Count);
-		RpcChooseStartingLights (aux);
+		ChooseStartingLights (aux);
 
 		InvokeRepeating("RpcGoToNextLight", timeBetweenLightTransitions, timeBetweenLightTransitions);
 	}
-
-	[ClientRpc]
-	void RpcChooseStartingLights(int index)
+		
+	void ChooseStartingLights(int index)
 	{
 		Debug.Log ("entrei");
 		currentActiveLightIndex = index;
