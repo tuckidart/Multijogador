@@ -35,27 +35,32 @@ public class LightsManager : NetworkBehaviour {
 	void CmdChoose()
 	{
 		int aux = Random.Range (0, lights.Count);
-		ChooseStartingLights (aux);
+		currentActiveLightIndex = aux;
+		lights [aux].ToggleLight ();
+
+		RpcChooseStartingLights (aux);
 
 		InvokeRepeating("RpcGoToNextLight", timeBetweenLightTransitions, timeBetweenLightTransitions);
 	}
-		
-	void ChooseStartingLights(int index)
+	[ClientRpc]
+	void RpcChooseStartingLights(int index)
 	{
 		currentActiveLightIndex = index;
-		lights [index].RpcToggleLight ();
+		lights [index].ToggleLight ();
+//		lights [index].isGreen = true;
+		Debug.Log ("EAI");
 	}
 
 	[ClientRpc]
 	void RpcGoToNextLight ()
 	{
-		lights [currentActiveLightIndex].RpcToggleLight ();
+		lights [currentActiveLightIndex].ToggleLight ();
 
 		currentActiveLightIndex++;
 
 		if (currentActiveLightIndex >= lights.Count)
 			currentActiveLightIndex = 0;
 
-		lights [currentActiveLightIndex].RpcToggleLight ();
+		lights [currentActiveLightIndex].ToggleLight ();
 	}
 }

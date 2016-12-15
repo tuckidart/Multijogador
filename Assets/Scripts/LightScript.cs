@@ -4,6 +4,7 @@ using UnityEngine.Networking;
 
 public class LightScript : NetworkBehaviour {
 
+	[SyncVar]
 	public bool isGreen;
 	public Light lightColor;
 	private Color red = new Color (255, 0, 0);
@@ -18,9 +19,8 @@ public class LightScript : NetworkBehaviour {
 		lightColor.transform.localPosition = new Vector3 (lightColor.transform.localPosition.x, 6.8f, lightColor.transform.localPosition.z);
 		//initialY = transform.position.y;
 	}
-
-	[ClientRpc]
-	public void RpcToggleLight ()
+		
+	public void ToggleLight ()
 	{
 		if (isGreen) 
 		{
