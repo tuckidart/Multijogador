@@ -17,6 +17,8 @@ public class Radar : NetworkBehaviour {
 	private float cooldownValue;
 	private BarScript barUI;
 
+	private bool isGreen;
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -30,6 +32,7 @@ public class Radar : NetworkBehaviour {
 			barUI.maxValue = 100;
 			barUI.updateAutomatically = false;
 			barUI.TurnChildrenOnOff (true);
+			barUI.SetColor (new Color (0.8f, 0f, 0f, 0.8f));
 		}
 	}
 	
@@ -89,5 +92,16 @@ public class Radar : NetworkBehaviour {
 
 		if (barUI)
 			barUI.SetCurrentValue(cooldownValue);
+
+		if (cooldownValue > useCost && isGreen == false) 
+		{
+			barUI.SetColor (new Color (0f, 0.8f, 0f, 0.8f));
+			isGreen = true;
+		}
+		else if (cooldownValue < useCost && isGreen == true) 
+		{
+			barUI.SetColor (new Color (0.8f, 0f, 0f, 0.8f));
+			isGreen = false;
+		}
 	}
 }

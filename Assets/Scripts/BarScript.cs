@@ -9,9 +9,13 @@ public class BarScript : MonoBehaviour {
 	public float maxValue;
 	public float currentValue;
 
+	private Image fillImage;
+
 	void Start ()
-	{
+	{	
 		TurnChildrenOnOff (false);
+
+		fillImage = transform.GetChild (1).GetChild (0).GetComponent<Image> ();
 	}
 
 	void Update ()
@@ -20,6 +24,11 @@ public class BarScript : MonoBehaviour {
 		{
 			mySlider.value = currentValue / maxValue;	
 		}
+	}
+
+	public void SetColor (Color newColor)
+	{
+		fillImage.color = newColor;
 	}
 
 	public void TurnChildrenOnOff (bool newStatus)
