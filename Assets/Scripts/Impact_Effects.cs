@@ -45,17 +45,21 @@ public class Impact_Effects : NetworkBehaviour {
 
 	void OnCollisionEnter(Collision hit)
 	{
-		if (hit.relativeVelocity.magnitude > 10.0f && hit.gameObject.name != "Ground" && hit.gameObject.name != "Curb" )
+		if (hit.gameObject.name != "Ground" && hit.gameObject.name != "Curb")
 		{
 			damageTaken = damageConstant * hit.relativeVelocity.magnitude;
 
-			CheckCarHealth ();
+//			if(hit.relativeVelocity.magnitude > 10.0f)
+//			{
+				CheckCarHealth ();
 
-			if (isLocalPlayer)
-			{
-				minimap.GetComponent<bl_MiniMap> ().DoHitEffect ();
-				cam.GetComponent<cameraShake> ().Shake ();
-			}
+				if (isLocalPlayer)
+				{
+					minimap.GetComponent<bl_MiniMap> ().DoHitEffect ();
+					cam.GetComponent<cameraShake> ().Shake ();
+				}	
+//			}
+//			CmdPlayCollisionSound ();
 		}
 	}
 
@@ -193,18 +197,23 @@ public class Impact_Effects : NetworkBehaviour {
 		}
 	}
 
+//	[Command]
+//	void CmdPlayCollisionSound()
+//	{
+//		RpcPlayCollisionSound (damageTaken);
+//	}
 	[ClientRpc]
 	void RpcPlayCollisionSound(float dmg)
 	{
-		if(dmg > 10 && dmg < 15)
+		if(dmg < 15)
 		{
 			crash.clip = crashType[0];
 		}
-		else if(dmg > 15 && dmg < 25)
+		else if(dmg >= 15 && dmg < 25)
 		{
 			crash.clip = crashType[1];
 		}
-		else if(dmg > 25)
+		else if(dmg >= 25)
 		{
 			crash.clip = crashType[2];
 		}
