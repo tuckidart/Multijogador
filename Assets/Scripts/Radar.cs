@@ -39,14 +39,17 @@ public class Radar : NetworkBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
-		if(isLocalPlayer)
-			if (Input.GetButtonDown ("Jump"))
-			{
-				if(objFound == null)
+		if (isLocalPlayer)
+		{
+			IncreaseCooldown ();
+
+			if (Input.GetButtonDown ("Jump")) {
+				if (objFound == null)
 					RadarScan ();
 				else
-					sirenEffectScript.CmdToggleSiren(true);
+					sirenEffectScript.CmdToggleSiren (true);
 			}
+		}
 
 		if(objFound != null)
 			if(Vector3.Distance(transform.position, objFound.transform.position) > distanceToLoseSuspect)
@@ -55,8 +58,6 @@ public class Radar : NetworkBehaviour {
 				objFound = null;
 				sirenEffectScript.CmdToggleSiren(false);
 			}
-			
-		IncreaseCooldown ();
 	}
 
 	void RadarScan()
