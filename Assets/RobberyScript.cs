@@ -34,7 +34,7 @@ public class RobberyScript : NetworkBehaviour {
 		barUI.maxValue = secondsToWait;
 		barUI.updateAutomatically = false;
 
-		Invoke ("LateStartFake", 1f);
+		Invoke ("LateStartFake", 5f);
 	}
 
 	void Update ()
